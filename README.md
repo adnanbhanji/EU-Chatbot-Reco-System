@@ -93,6 +93,9 @@ User guides and technical documentation can be found here.
 
 ### 🙏 Acknowledgments:
 
+### DEMO:
+https://drive.google.com/file/d/1ZdZFKwC7FdsoWqDSDwNN1BUNR34xbHax/view?usp=sharing
+
 We would like to express our gratitude to our mentors, collaborators, and data providers who contributed to the success of this project.
 
 ### 📜 Appendix:
