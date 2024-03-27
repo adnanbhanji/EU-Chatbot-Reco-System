@@ -4,7 +4,7 @@
 
 Compliance with EU Commission environmental carbon emission reporting mandates can be a laborious process, prone to human error, and costly in terms of time and resources. This project aims to solve this with a WhatsApp-based chatbot designed to streamline and simplify carbon emission reporting, ensuring compliance with EU Commission reporting standards.
 
-### 🔑 Key Features & Benefits:
+### 🔑 Key Features & Benefits
 
 - **Dynamic Reporting**: Utilise Natural Language Processing (NLP) and AI to send and receive text messages via WhatsApp, which auto-populate the carbon emission report with real-time data.
 - **Efficiency**: Eliminate manual data entry and reduce reporting time significantly.
@@ -14,18 +14,18 @@ Compliance with EU Commission environmental carbon emission reporting mandates c
 - **Cost-Effective**: A cost-efficient alternative to hiring additional personnel or outsourcing reporting.
 - **Environmental Impact**: Simplifying reporting contributes to a company's broader sustainability efforts.
 
-### DEMO:
+### ChatBot DEMO
 https://drive.google.com/file/d/1ZdZFKwC7FdsoWqDSDwNN1BUNR34xbHax/view?usp=sharing
 
 We would like to express our gratitude to our mentors, collaborators, and data providers who contributed to the success of this project.
 
-### Prerequisites:
+### Prerequisites
 
 Before you begin, ensure you meet the following requirements:
 - Python 3.6 - 3.9 installed on your system.
 - Pip for installing Python packages.
 
-###  Installation:
+###  Installation
 
 Follow these steps to set up the project locally:
 
@@ -112,7 +112,7 @@ The project includes unit and integration tests. To run these tests, follow thes
 
 Ensure your testing environment variables are set correctly.
 
-### 👥 The Team:
+### 👥 The Team
 
 - Adnan Bhanji: Project Manager
 - Beatrice Mossberg: Data Engineer
