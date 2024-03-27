@@ -1,33 +1,45 @@
-name: Deploy to Azure App Service
+name: Deploy Chatbot Application to Azure App Service
 
 on:
   push:
     branches:
-      - main  # default branch
+      - main  # Or your default branch, e.g., master
 
 jobs:
-  build-and-deploy:
+  test-and-deploy:
     runs-on: ubuntu-latest
+    
     steps:
     - uses: actions/checkout@v2
-
+    
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.8'  # Specify your Python version
+        python-version: '3.8'  # Ensure this matches your project's Python version
 
-    - name: Install Python dependencies
+    - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Zip the application
-      run: zip -r deploy.zip . -x "*.git*"
+    - name: Run Unit Tests
+      run: |
+        pytest tests/unit/
 
-    - name: 'Deploy to Azure Web App'
+    - name: Run Integration Tests
+      run: |
+        pytest tests/integration/
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}  # Azure service principal JSON details
+
+    - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
-        app-name: '<app-name>'  # Your Azure App Service name
-        slot-name: 'dvelopment'  # Optional: If you're using deployment slots
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: './deploy.zip'
+        app-name: eu-report-chatbot  # Your Azure App Service name
+        slot-name: 'production'  # Optional: specify if using deployment slots
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Publish profile from Azure
+        package: '.'  # Path to your project directory, adjust if necessary
+
