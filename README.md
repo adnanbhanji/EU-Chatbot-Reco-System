@@ -1,12 +1,8 @@
 # EU-Chatbot-Reco-System
 
-### 🌍 The Challenge:
+### 🌍 Project Description
 
-Compliance with EU Commission environmental carbon emission reporting mandates can be a laborious process, prone to human error, and costly in terms of time and resources.
-
-### 🤖 The Solution:
-
-Introducing the WhatsApp-based chatbot designed to streamline and simplify carbon emission reporting, ensuring compliance with EU Commission standards.
+Compliance with EU Commission environmental carbon emission reporting mandates can be a laborious process, prone to human error, and costly in terms of time and resources. This project aims to solve this with a WhatsApp-based chatbot designed to streamline and simplify carbon emission reporting, ensuring compliance with EU Commission reporting standards.
 
 ### 🔑 Key Features & Benefits:
 
