@@ -18,69 +18,103 @@ Introducing the WhatsApp-based chatbot designed to streamline and simplify carbo
 - **Cost-Effective**: A cost-efficient alternative to hiring additional personnel or outsourcing reporting.
 - **Environmental Impact**: Simplifying reporting contributes to a company's broader sustainability efforts.
 
-### 🤝 Affected Stakeholders:
+### DEMO:
+https://drive.google.com/file/d/1ZdZFKwC7FdsoWqDSDwNN1BUNR34xbHax/view?usp=sharing
 
-- **Organizations and Businesses**: Companies subject to EU carbon emission reporting mandates benefit from efficient and accurate reporting, reducing compliance risks.
-- **Regulatory Authorities**: EU Commission and national environmental agencies benefit from improved data collection and compliance verification.
-- **Environmental Advocacy Groups**: Organizations focused on sustainability appreciate efforts to reduce carbon emissions and improve reporting accuracy.
-- **Investors and Shareholders**: Increased reporting accuracy enhances investor confidence and supports sustainability goals.
-- **Environmental Consultants and Auditors**: These experts see value in a tool that streamlines reporting processes and enhances accuracy.
+We would like to express our gratitude to our mentors, collaborators, and data providers who contributed to the success of this project.
 
-### 🛠️ Technology Stack:
+### Prerequisites:
 
-- Programming Languages: Python
-- Frameworks: Flask
-- Natural Language Processing Libraries: NLTK, Huggingface, Langchain
-- Database: PostgreSQL
-- Messaging Platform: WhatsApp API
-- Machine Learning:
-- Data Visualization: Matplotlib
+Before you begin, ensure you meet the following requirements:
+- Python 3.6 - 3.9 installed on your system.
+- Pip for installing Python packages.
 
-### 🧠 Methodology:
+###  Installation:
 
-Our approach involves:
+Follow these steps to set up the project locally:
 
-- Data collection from various sources, including public agricultural ministry datasets and internal databases.
-- Training and fine-tuning NLP models for text analysis.
-- Developing a chatbot using Python and Flask, including defining user flow and minimizing questions asked until report is filled.
-- Integration with WhatsApp API for user interaction.
+1. **Clone the repository**
+   
+   Clone the project repository to your local machine using Git:
+   
+   ```sh
+   git clone https://github.com/adnanbhanji/EU-Chatbot-Reco-System.git
+   cd EU-Chatbot-Reco-System
+   ```
 
-### 📚 Data Sources:
+2. **Create a virtual environment**
 
-We collect data from:
+   It's recommended to create a virtual environment for Python projects to manage dependencies effectively. You can do this by running:
+   
+   ```sh
+   python3 -m venv venv
+   ```
 
-- Public agricultural ministry datasets
-- EU Commission guidelines and datasets.
-- Internal databases from user intraction
+   Activate the virtual environment:
+   - On Windows:
+     ```sh
+     .\venv\Scripts\activate
+     ```
+   - On Unix or MacOS:
+     ```sh
+     source venv/bin/activate
+     ```
 
-Fake Template Report: https://drive.google.com/file/d/1YsBcwr6d59_d4rpqOVz3nuBYTawpmfz9/view?usp=sharing
+3. **Install dependencies**
 
-### 🚀 Implementation Details:
+   Install all the required dependencies using pip:
+   
+   ```sh
+   pip install -r requirements.txt
+   ```
 
-The chatbot is implemented using Flask and integrated with the WhatsApp API to enable real-time reporting. NLP models are used to analyze text messages and auto-populate reports.
+4. **Set up environment variables**
 
-### 🧪 Testing and Validation:
+   Create a `.env` file in the root directory of the project to store your environment variables (e.g., API keys, database URLs). Refer to the `.env.example` file for the required variables.
 
-The chatbot was rigorously tested against various reporting scenarios, and validation was performed to ensure it meets EU Commission standards for accuracy and compliance.
+5. **Run the setup script**
 
-### 📈 Results and Metrics:
+   Ensure `setup.py` is properly configured, then run it to install the package locally:
+   
+   ```sh
+   python setup.py develop
+   ```
 
-The EcoReportBot has reduced reporting time and improved accuracy to ensure compliance with EU Commission mandates. Key metrics include response time and user satisfaction.
+### Configuration
 
-### 💡 Lessons Learned:
+- **Vonage and OpenAI Credentials**: Ensure you have valid credentials for Vonage and OpenAI. These should be set in the `config.py` file or stored as environment variables and read from there.
 
-### 📆 Future Enhancements:
+### Running the Application
 
-In the future, we plan to:
+To run the application, execute the following command in the root directory:
 
-- Expand language support.
-- Incorporate advanced AI features for predictive analysis.
-- Develop a mobile app for accessibility.
-- Enhance reporting visualization.
+```sh
+python src/app.py
+```
 
-### 📄 Documentation:
+This will start a Flask web server on the specified port (default is 8080). The server will handle incoming requests as defined in your application routes.
 
-User guides and technical documentation can be found here.
+### Testing
+
+The project includes unit and integration tests. To run these tests, follow these steps:
+
+1. **Unit Tests**
+
+   Run the unit tests to ensure the individual components function correctly:
+   
+   ```sh
+   pytest tests/unit/
+   ```
+
+2. **Integration Tests**
+
+   Run the integration tests to verify the application works as expected when components interact:
+   
+   ```sh
+   pytest tests/integration/
+   ```
+
+Ensure your testing environment variables are set correctly.
 
 ### 👥 The Team:
 
@@ -91,13 +125,10 @@ User guides and technical documentation can be found here.
 - Khaled Akel: Machine Learning Engineer
 - Hussein Soliman: MLOps Engineer
 
-### 🙏 Acknowledgments:
+## Contributing
 
-### DEMO:
-https://drive.google.com/file/d/1ZdZFKwC7FdsoWqDSDwNN1BUNR34xbHax/view?usp=sharing
+Contributions are welcome! Please feel free to submit pull requests or open issues to suggest improvements or add new features.
 
-We would like to express our gratitude to our mentors, collaborators, and data providers who contributed to the success of this project.
+## License
 
-### 📜 Appendix:
-
-For additional code snippets, data samples, and graphs, please refer to the appendix.
+See the [MIT Licenese](https://github.com/adnanbhanji/EU-Chatbot-Reco-System/blob/729f6c44b4583e550ab68274eee0a8b37536ff1f/LICENSE).
