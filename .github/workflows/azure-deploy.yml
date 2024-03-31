@@ -3,7 +3,7 @@ name: Deploy Chatbot Application to Azure App Service
 on:
   push:
     branches:
-      - main  # Or your default branch, e.g., master
+      - main  # default branch
 
 jobs:
   test-and-deploy:
