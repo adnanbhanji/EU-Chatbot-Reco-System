@@ -1,9 +1,8 @@
 # Data Schema
 
-
 ## Overview
 
-The database schema for the dairy farmers' carbon emission reporting project integrates a relational model to facilitate data collection through a WhatsApp chatbot and secure storage on the Polygon blockchain. It comprises three main tables: Users, Emission Report, and Blockchain Transaction. These tables store detailed farmer profiles, carbon emission reports with quantitative and qualitative data, and immutable transaction records linking each report to a specific blockchain entry.
+The database schema for the dairy farmers' carbon emission reporting project utilizes a relational model optimized for data collection through a WhatsApp chatbot and secure storage on Azure's cloud infrastructure. It includes key tables for managing user profiles, emission reports, and associated data to ensure comprehensive tracking and analysis of carbon emission data.
 
 ## Tables
 
@@ -17,7 +16,6 @@ The database schema for the dairy farmers' carbon emission reporting project int
 | **FarmLocation**   | `VARCHAR(255)` | Geographical location of the farm.                 |
 | **FarmSize**       | `DECIMAL`      | Size of the farm (e.g., in hectares).              |
 
-
 ### Table 2: Emission Report
 
 | Field            | Type           | Description                                             |
@@ -29,14 +27,3 @@ The database schema for the dairy farmers' carbon emission reporting project int
 | **EmissionSource** | `VARCHAR(255)` | Source of emission within the farm (e.g., livestock, machinery). |
 | **Quantity**       | `DECIMAL`      | Quantified emission (e.g., in kilograms of CO2 equivalent). |
 | **CalculationMethod**| `VARCHAR(255)` | Method or model used for emission calculation |
-
-### Table 3: Blockchain Transaction
-
-| Field            | Type          | Description                                                      |
-|------------------|---------------|------------------------------------------------------------------|
-| **TransactionID** | `VARCHAR(255)`| Unique identifier for the blockchain transaction.               |
-| **ReportID**      | `VARCHAR(255)`| Links to Emission Report.                                        |
-| **TransactionHash** | `VARCHAR(255)`| Hash of the transaction on the Polygon blockchain.               |
-| **Timestamp**      | `DATETIME`    | Date and time when the transaction was recorded on the blockchain.|
-| **BlockNumber**    | `INT`         | The block number on the Polygon blockchain where the transaction was recorded.|
-| **WalletAddress**  | `VARCHAR(255)`| The blockchain wallet address used for the transaction.          |
