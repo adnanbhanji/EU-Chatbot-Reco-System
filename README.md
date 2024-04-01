@@ -1,14 +1,10 @@
 # EU-Chatbot-Reco-System
 
-### 🌍 The Challenge:
+## 🌍 Project Description
 
-Compliance with EU Commission environmental carbon emission reporting mandates can be a laborious process, prone to human error, and costly in terms of time and resources.
+Compliance with EU Commission environmental carbon emission reporting mandates can be a laborious process, prone to human error, and costly in terms of time and resources. This project aims to solve this with a WhatsApp-based chatbot designed to streamline and simplify carbon emission reporting, ensuring compliance with EU Commission reporting standards.
 
-### 🤖 The Solution:
-
-Introducing the WhatsApp-based chatbot designed to streamline and simplify carbon emission reporting, ensuring compliance with EU Commission standards.
-
-### 🔑 Key Features & Benefits:
+## 🔑 Key Features & Benefits
 
 - **Dynamic Reporting**: Utilise Natural Language Processing (NLP) and AI to send and receive text messages via WhatsApp, which auto-populate the carbon emission report with real-time data.
 - **Efficiency**: Eliminate manual data entry and reduce reporting time significantly.
@@ -18,71 +14,25 @@ Introducing the WhatsApp-based chatbot designed to streamline and simplify carbo
 - **Cost-Effective**: A cost-efficient alternative to hiring additional personnel or outsourcing reporting.
 - **Environmental Impact**: Simplifying reporting contributes to a company's broader sustainability efforts.
 
-### 🤝 Affected Stakeholders:
+## 🤖 ChatBot DEMO
+View the [Chatbot Video Demo](https://drive.google.com/file/d/1ZdZFKwC7FdsoWqDSDwNN1BUNR34xbHax/view?usp=sharing).
 
-- **Organizations and Businesses**: Companies subject to EU carbon emission reporting mandates benefit from efficient and accurate reporting, reducing compliance risks.
-- **Regulatory Authorities**: EU Commission and national environmental agencies benefit from improved data collection and compliance verification.
-- **Environmental Advocacy Groups**: Organizations focused on sustainability appreciate efforts to reduce carbon emissions and improve reporting accuracy.
-- **Investors and Shareholders**: Increased reporting accuracy enhances investor confidence and supports sustainability goals.
-- **Environmental Consultants and Auditors**: These experts see value in a tool that streamlines reporting processes and enhances accuracy.
+## 📄 Documentation and Set Up Guide
 
-### 🛠️ Technology Stack:
+For detailed documentation on setup, configuration, architecture, and more, please refer to the `docs` folder in this repository. Here you will find comprehensive guides and technical details:
 
-- Programming Languages: Python
-- Frameworks: Flask
-- Natural Language Processing Libraries: NLTK, Huggingface, Langchain
-- Database: PostgreSQL
-- Messaging Platform: WhatsApp API
-- Machine Learning:
-- Data Visualization: Matplotlib
+- [Getting Started](./docs/getting_started.md)
+- [User Guide](./docs/user_guide.md)
+- [Architecture Overview](./docs/architecture_overview.md)
+- [Data Schema](./docs/data_schema.md)
+- [Model Architecture](./docs/model_architecture.md)
+- [Release Notes](./docs/release_notes.md)
+- [Technical Design](./docs/technical_design.md)
+- [API Reference](./docs/api_reference.md)
+- [FAQ](./docs/faq.md)
+- [Glossary](./docs/glossary.md)
 
-### 🧠 Methodology:
-
-Our approach involves:
-
-- Data collection from various sources, including public agricultural ministry datasets and internal databases.
-- Training and fine-tuning NLP models for text analysis.
-- Developing a chatbot using Python and Flask, including defining user flow and minimizing questions asked until report is filled.
-- Integration with WhatsApp API for user interaction.
-
-### 📚 Data Sources:
-
-We collect data from:
-
-- Public agricultural ministry datasets
-- EU Commission guidelines and datasets.
-- Internal databases from user intraction
-
-Fake Template Report: https://drive.google.com/file/d/1YsBcwr6d59_d4rpqOVz3nuBYTawpmfz9/view?usp=sharing
-
-### 🚀 Implementation Details:
-
-The chatbot is implemented using Flask and integrated with the WhatsApp API to enable real-time reporting. NLP models are used to analyze text messages and auto-populate reports.
-
-### 🧪 Testing and Validation:
-
-The chatbot was rigorously tested against various reporting scenarios, and validation was performed to ensure it meets EU Commission standards for accuracy and compliance.
-
-### 📈 Results and Metrics:
-
-The EcoReportBot has reduced reporting time and improved accuracy to ensure compliance with EU Commission mandates. Key metrics include response time and user satisfaction.
-
-### 💡 Lessons Learned:
-
-### 📆 Future Enhancements:
-
-In the future, we plan to:
-
-- Expand language support.
-- Incorporate advanced AI features for predictive analysis.
-- Develop a mobile app for accessibility.
-- Enhance reporting visualization.
-
-### 📄 Documentation:
-
-User guides and technical documentation can be found here.
-
-### 👥 The Team:
+## 👥 The Team 
 
 - Adnan Bhanji: Project Manager
 - Beatrice Mossberg: Data Engineer
@@ -91,13 +41,21 @@ User guides and technical documentation can be found here.
 - Khaled Akel: Machine Learning Engineer
 - Hussein Soliman: MLOps Engineer
 
-### 🙏 Acknowledgments:
+## 🙏 Acknowledgments
 
-### DEMO:
-https://drive.google.com/file/d/1ZdZFKwC7FdsoWqDSDwNN1BUNR34xbHax/view?usp=sharing
+We extend our deepest gratitude to everyone who contributed to the development and success of the EU-Chatbot-Reco-System. This project was realized through the collaborative efforts of a dedicated team and the invaluable support from various individuals and organizations.
 
-We would like to express our gratitude to our mentors, collaborators, and data providers who contributed to the success of this project.
+- **Mentorship and Guidance**: We offer special thanks to our mentors and professors at IE University BCSAI ST24, who provided us with the academic foundation and the encouragement necessary to explore innovative solutions. Your insights and feedback were instrumental in guiding the direction of our project.
 
-### 📜 Appendix:
+- **Data Providers and Industry Experts**: Our appreciation extends to the agriculture consultants and sustainability experts. Vera Söderberg first introduced us to the agriculture industry and provided connections to entities such as Harvest House, Agronod, and Arla Foods. This led to further engagement with Hanne Sondergaard and Elmira Gardashova from Arla Foods. Thank you for your willingness to share knowledge and insights, which significantly contributed to our understanding of the industry's needs and challenges.
 
-For additional code snippets, data samples, and graphs, please refer to the appendix.
+This project stands as a testament to the power of collaboration and a shared vision. We are grateful to be part of such a supportive community and look forward to continuing our work, building on the strong foundation you have all helped us establish.
+
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit pull requests or open issues to suggest improvements or add new features.
+
+## 🖋️ License
+
+See the [MIT Licenese](https://github.com/adnanbhanji/EU-Chatbot-Reco-System/blob/729f6c44b4583e550ab68274eee0a8b37536ff1f/LICENSE).
