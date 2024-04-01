@@ -42,43 +42,56 @@ async def reply(question: Request):
     llm_question = body[b'Body'][0].decode()
 
     if from_number not in conversation_states:
-        conversation_states[from_number] = {"state": 1, "ask_mode": False}
+        conversation_states[from_number] = {"state": 1, "ask_mode": False, "question_mode": False}
 
-    if llm_question.lower() == "start report":
-        conversation_states[from_number] = {"state": 1, "ask_mode": False}
+    # Initialize response with a default value
+    response = "I'm not sure how to process that. Can you please clarify?"
 
-    if llm_question.endswith("?"):
-        # Directly query the model if the message ends with a question mark
+    if llm_question.lower() == "solved" and conversation_states[from_number]["question_mode"]:
+        conversation_states[from_number]["question_mode"] = False
+        # Directly move to the next part of the conversation based on the current state
+        state = conversation_states[from_number]["state"]
+        if state == 1:
+            response = "What's your full name?"
+            conversation_states[from_number]["state"] += 1
+        elif state == 2:
+            response = "Where is your farm located?"
+            conversation_states[from_number]["state"] += 1
+        elif state == 3:
+            response = "How large is your farm?"
+            conversation_states[from_number]["state"] += 1
+        elif state == 4:
+            response = "Thank you for the information! You can now ask me any question."
+            conversation_states[from_number]["ask_mode"] = True
+    elif llm_question.endswith("?"):
+        # Handling a question; the "question_mode" is set to True
+        conversation_states[from_number]["question_mode"] = True
         try:
             response = query_engine.query(llm_question)
         except Exception as e:
             logger.error(f"Error processing query: {e}")
-            response = "Sorry, I couldn't process your request."
     else:
-        if not conversation_states[from_number]["ask_mode"]:
-            # Standard conversation logic
+        if not conversation_states[from_number]["ask_mode"] and not conversation_states[from_number]["question_mode"]:
+            # Proceeding through initial questions if not in ask_mode or question_mode
             state = conversation_states[from_number]["state"]
             if state == 1:
                 response = "What's your full name?"
-                conversation_states[from_number]["state"] = 2
+                conversation_states[from_number]["state"] += 1
             elif state == 2:
                 response = "Where is your farm located?"
-                conversation_states[from_number]["state"] = 3
+                conversation_states[from_number]["state"] += 1
             elif state == 3:
                 response = "How large is your farm?"
-                conversation_states[from_number]["state"] = 4
+                conversation_states[from_number]["state"] += 1
             elif state == 4:
                 response = "Thank you for the information! You can now ask me any question."
                 conversation_states[from_number]["ask_mode"] = True
-            else:
-                response = "Sorry, I couldn't process your request."
         else:
-            # Query handling logic
+            # Handling a general inquiry when in ask_mode or after question_mode without a direct question
             try:
                 response = query_engine.query(llm_question)
             except Exception as e:
                 logger.error(f"Error processing query: {e}")
-                response = "Sorry, I couldn't process your request."
 
     send_message(MY_NUMBER, response)
     return {"message": response}
