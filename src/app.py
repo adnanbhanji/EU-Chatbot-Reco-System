@@ -1,9 +1,14 @@
 import json, os, logging
 from dateutil import tz
-from config import *
 from commands import *
 from argparse import ArgumentParser
 from flask import Flask, request, Response, send_file
+import sys
+import os
+# Adding the 'src' directory to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'config')))
+from config import *
+
 
 app = Flask(__name__)
 logging.basicConfig(format='%(message)s', level=logging.INFO)

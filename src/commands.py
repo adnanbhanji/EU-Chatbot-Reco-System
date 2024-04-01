@@ -1,10 +1,15 @@
 import requests, json
 from   requests.auth import HTTPBasicAuth
-from   config import *
 import openai
 import logging
-from openai.error import RateLimitError
-from config import vonage_sandbox_number, vonage_authorization_header, endpoint_vonage_message_send
+from openai import RateLimitError
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'config')))
+from config import *
+
+#from config import vonage_sandbox_number, vonage_authorization_header, endpoint_vonage_message_send
 from datetime import datetime
 from toPDF import create_pdf_from_string
 

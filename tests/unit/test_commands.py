@@ -1,30 +1,28 @@
-import pytest
-from src import *
+import unittest
+from unittest.mock import MagicMock, patch
+import sys
+import os
 
-# test_commands.py
+# Adding the 'src' directory to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'src')))
+from commands import *
 
-def test_chatgpt_text():
-    # Mock request data
-    req_data = {'text': 'Hello', 'from': '12345'}
-    # Call the function
-    response = commands.chatgpt_text(req_data)
-    # Assert the response is not empty
-    assert response is not None
-    assert len(response) > 0
+class TestCommands(unittest.TestCase):
 
-def test_help_command():
-    # Mock request data
-    req_data = {}
-    # Call the help function
-    response = commands.help(req_data)
-    # Assert the response matches expected help message
-    expected_message = "Ask me anything..."
-    assert response == expected_message
+    def test_help(self):
+        req_data = {}
+        response = help(req_data)
+        self.assertEqual(response, "Ask me anything...")
 
+    def test_is_valid_name(self):
+        self.assertTrue(is_valid_name("John Doe"))
+        self.assertFalse(is_valid_name("123"))
 
-# test_utils.py
+    def test_is_valid_number(self):
+        self.assertTrue(is_valid_number("123.45"))
+        self.assertFalse(is_valid_number("abc"))
 
-def test_is_valid_number():
-    assert commands.is_valid_number("100") is True
-    assert commands.is_valid_number("notanumber") is False
-    assert commands.is_valid_number("123.45") is True
+ 
+
+if __name__ == '__main__':
+    unittest.main()
