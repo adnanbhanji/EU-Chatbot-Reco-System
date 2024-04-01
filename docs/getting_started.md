@@ -1,42 +1,63 @@
 # Getting Started
 
+This guide outlines the steps required to set up and run the project, connecting it to WhatsApp via the Vonage API and leveraging Flask, ngrok, and OpenAI for functionality.
+
 ## Prerequisites
 
-List of prerequisites and how to install them.
+Before starting, ensure you have the following prerequisites installed and set up:
+- Python
+- Flask
+- ngrok
+
+Instructions on installing these prerequisites can be found at their respective official documentation pages.
 
 ## Installation
 
-Step-by-step guide to installing the project.
+Follow this step-by-step guide to install the project:
+
+1. **Sign Up for Vonage API**: Create a free account at [Vonage API](https://developer.vonage.com/en/home) to obtain your API keys.
+2. **Install Python, Flask, and ngrok**: Make sure you have Python and Flask installed. For ngrok, follow the setup instructions specific to your operating system at [ngrok setup](https://dashboard.ngrok.com/get-started/setup).
+3. **Set Up the WhatsApp API Sandbox**:
+   - Navigate to the API Dashboard --> Developer Tools --> Message Sandbox.
+   - Scan the QR code provided and send the given passphrase to the displayed number via WhatsApp.
+   - Initialize ngrok in your command line interface (CLI) by typing `ngrok http 8080`. This command generates a forwarding URL.
+   - In your Vonage account's Message Sandbox settings, paste the forwarding URL into the inbound webhook URL field and append `/wastatus` for the status webhook URL.
+
+4. **Install Project Dependencies**:
+   - Locate the `requirements.txt` file in your project directory.
+   - Run `pip install -r requirements.txt` to install all necessary dependencies.
 
 ## Running the Project
 
-Instructions on how to run the project:
+To run the project and connect it to your WhatsApp, follow these detailed steps:
 
-### How to connect our model to your whatsapp
+1. **Generate Authorization Header**:
+   - Navigate to `watsapp` --> `generate_auth.py`.
+   - Enter your Vonage `api_key` and `api_secret` found under API Settings in your Vonage account.
+   - Execute `python generate_auth.py` to generate your authorization header.
+   - Copy the generated authorization header into `config.py` as the value for `vonage_authorization_header`.
 
-1) Start by signing up for a free Vonage API account: https://developer.vonage.com/en/home
-2) Download python, flask and ngrok
-3) For ngrok, you have to create an account here(check if you have mac or windows): https://dashboard.ngrok.com/get-started/setup/macos
-4) First start by creating a message API Sandbox for whatsapp:
-      - Once you sign up to Vonage, go to API Dashboard --> Deveolper Tools --> and Message Sandbox.
-      - Then scan the QR code and send the passphrase given to that number in whatsapp.
-      - Then, after you downloaded ngrok, co to your cmd and type ngrok to make sure it works.
-      - After, type ngrok http 8080: This will give you a forwarding URL that ends with free.app.
-      - Copy that link, and go back to your vonage account, and paste it on the message sandbox, where it says webhooks on the inbound box. On the Status box, paste the same link, and on the end put "/wastatus". 
-      - Finally, save the webhooks.
-5) Now for the code:
-      - Go to watsapp --> generate_auth.py, and put your api_key and api_secret(you will find this in your Vonage account in API Settings) and save.
-      - Next, run python generate_auth.py. This will give you the authorization_header.
-      - Next, go to config.py and paste that authorization_header in the vonage_authorization_header.
-      - Then, go to OpenAI(https://platform.openai.com/api-keys), and create an OpenAI API Key(make sure this key has credit, otherwise it will give you an error saying there is a problem with your OpenAI API Key).
-      -  After, in the vonage_sandbox_number, input the number you sent the passphrase to in whatsapp(the vonage number). You should input this number without the + sign. E.g., 14157386102.
-      -  Then, go to the commands.py, and in this part of the code: elif question != "JOIN LINT MUSIC", replace "JOIN LINT MUSIC" with your passphrase in all caps.
-      -  Finally, save this.
-  6) Next to run the code, you should enter these commands:
-      - Remove-Item -Recurse -Force .\env\
-      - python -m venv env
-      - .\env\Scripts\activate
-      - python -m pip install --upgrade pip setuptools wheel
-      - pip install flask openai requests python-dateutil
-      - pip install openai==0.28.1
-7) Finally, run python app.py and send a message throught whatsapp to test our model! (Type start registration, or start report if you want to start those processes, otherwise it will connect you to ChatGPT).
+2. **Configure OpenAI API Key**:
+   - Create an API Key at [OpenAI](https://platform.openai.com/api-keys). Ensure your key has credits to avoid errors.
+   - In `config.py`, replace `openai_key` with your newly created OpenAI API Key.
+
+3. **Update Configuration**:
+   - In `config.py`, update `vonage_sandbox_number` with the number you used to send the passphrase to, excluding the `+` sign.
+
+4. **Customize Command Trigger**:
+   - In `commands.py`, find the line `elif question != "JOIN LINT MUSIC"` and replace `"JOIN LINT MUSIC"` with your passphrase in all caps.
+
+5. **Environment Setup and Dependencies**:
+   - Execute the following commands in your CLI to prepare your environment:
+     ```bash
+     Remove-Item -Recurse -Force .\env\
+     python -m venv env
+     .\env\Scripts\activate
+     python -m pip install --upgrade pip setuptools wheel
+     ```
+
+6. **Run the Application**:
+   - Start the application with `python app.py`.
+   - Test the model by sending a message through WhatsApp. Use commands like "start registration" or "start report" to initiate specific processes, or directly interact with ChatGPT for other inquiries.
+
+This setup guide should help you successfully configure and run the project, integrating it with WhatsApp for real-time messaging and data processing.
