@@ -1,42 +1,64 @@
-# Getting Started
+# Getting Started with Llama2 WhatsApp Chatbot Integration
+
+This guide provides step-by-step instructions to set up a Llama2-powered chatbot for WhatsApp. Before proceeding, ensure you have the necessary tokens and IDs from WhatsApp and Replicate.
 
 ## Prerequisites
 
-List of prerequisites and how to install them.
+Before you start, you will need:
+- **WhatsApp API Token**: For sending messages via WhatsApp.
+- **WhatsApp Cloud Number ID**: The ID of your WhatsApp business number.
+- **Recipient's WhatsApp ID**: The ID of the chatbot's recipient.
+- **Replicate API Token**: For interacting with Llama2 AI(https://replicate.com/).
+For getting the first 3, you can follow this guide: https://developers.facebook.com/docs/whatsapp/cloud-api/get-started#set-up-developer-assets
 
-## Installation
+## Setup
 
-Step-by-step guide to installing the project.
+### Environment Setup
 
-## Running the Project
+1. **Create a Virtual Environment** (Windows):
+    ```cmd
+    python3 -m venv whatsapp-llama
+    .\whatsapp-llama\Scripts\activate
+    pip install langchain replicate flask requests uvicorn gunicorn
+    ```
+After activating the virtual environment, install the necessary Python packages. Ensure your virtual environment is selected as the kernel if using an IDE.
 
-Instructions on how to run the project:
+### Running the Chatbot
 
-### How to connect our model to your whatsapp
+1. **Launch the Application**:
+    Execute the chatbot application with the following command:
+    ```cmd
+    python app.py
+    ```
 
-1) Start by signing up for a free Vonage API account: https://developer.vonage.com/en/home
-2) Download python, flask and ngrok
-3) For ngrok, you have to create an account here(check if you have mac or windows): https://dashboard.ngrok.com/get-started/setup/macos
-4) First start by creating a message API Sandbox for whatsapp:
-      - Once you sign up to Vonage, go to API Dashboard --> Deveolper Tools --> and Message Sandbox.
-      - Then scan the QR code and send the passphrase given to that number in whatsapp.
-      - Then, after you downloaded ngrok, co to your cmd and type ngrok to make sure it works.
-      - After, type ngrok http 8080: This will give you a forwarding URL that ends with free.app.
-      - Copy that link, and go back to your vonage account, and paste it on the message sandbox, where it says webhooks on the inbound box. On the Status box, paste the same link, and on the end put "/wastatus". 
-      - Finally, save the webhooks.
-5) Now for the code:
-      - Go to watsapp --> generate_auth.py, and put your api_key and api_secret(you will find this in your Vonage account in API Settings) and save.
-      - Next, run python generate_auth.py. This will give you the authorization_header.
-      - Next, go to config.py and paste that authorization_header in the vonage_authorization_header.
-      - Then, go to OpenAI(https://platform.openai.com/api-keys), and create an OpenAI API Key(make sure this key has credit, otherwise it will give you an error saying there is a problem with your OpenAI API Key).
-      -  After, in the vonage_sandbox_number, input the number you sent the passphrase to in whatsapp(the vonage number). You should input this number without the + sign. E.g., 14157386102.
-      -  Then, go to the commands.py, and in this part of the code: elif question != "JOIN LINT MUSIC", replace "JOIN LINT MUSIC" with your passphrase in all caps.
-      -  Finally, save this.
-  6) Next to run the code, you should enter these commands:
-      - Remove-Item -Recurse -Force .\env\
-      - python -m venv env
-      - .\env\Scripts\activate
-      - python -m pip install --upgrade pip setuptools wheel
-      - pip install flask openai requests python-dateutil
-      - pip install openai==0.28.1
-7) Finally, run python app.py and send a message throught whatsapp to test our model! (Type start registration, or start report if you want to start those processes, otherwise it will connect you to ChatGPT).
+## WhatsApp Business Platform Cloud API Integration
+
+(Note: These steps are informative. For our project we will the same WhatsApp business account for this integration since it requires many steps.)
+
+1. **Visit the WhatsApp Business Platform Cloud API guide** for initial setup instructions.
+2. **Add WhatsApp to Your App**: Integrate WhatsApp with your business application through Meta's developer portal. Open this page: "https://developers.facebook.com/apps/" and create a business app
+3. **Register a Phone Number**: Use a new number that's not been registered with WhatsApp before. You can not use the one given, since it will not work.
+4. **Test Message Sending**: Follow the guide to send a test message.
+5. **Set Up Webhooks**: Configure webhooks for real-time updates and notifications.
+
+### Modifying the Webhook
+
+1. **Glitch Account**: Create an account on glitch.com.
+2. **Server Configuration**: Copy the `server.js` code provided in the llama2_whatsapp_bot to Glitch, adjusting the `.env` file with your tokens and Flask app URL you get from typing ngrok http 5000.
+
+It should looks something like this:
+   - WEBHOOK_VERIFY_TOKEN=HAPPY
+   - GRAPH_API_TOKEN=
+   - FLASK_APP_URL=https://9794-80-39-23-81.ngrok-free.app
+
+4. **Webhook URL**: Share your live site webhook URL from Glitch into the WhatsApp configuration in the meta for developers portal.
+
+### Running the Chatbot
+
+- **Web Server Launch**: Use the command below on your terminal to run the Flask app.
+    ```cmd
+    python app.py
+    ```
+
+This guide aims to streamline the setup process for integrating Llama2 with WhatsApp, enhancing user engagement through AI-driven conversations. Ensure all tokens and IDs are securely stored and used appropriately throughout the setup.
+
