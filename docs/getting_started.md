@@ -39,4 +39,5 @@ Instructions on how to run the project:
       - python -m pip install --upgrade pip setuptools wheel
       - pip install flask openai requests python-dateutil
       - pip install openai==0.28.1
+      - pip install fpdf
 7) Finally, run python app.py and send a message throught whatsapp to test our model! (Type start registration, or start report if you want to start those processes, otherwise it will connect you to ChatGPT).
