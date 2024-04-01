@@ -24,7 +24,7 @@ python app.py
 ```
 Demo: https://drive.google.com/file/d/1cb83jhmdXKi2ctPJBOPmq6Hrvki41uSL/view?usp=sharing
 
-## (Don´t do these steps since we are only going to use one Whatsapp business account)
+(Don´t do these steps since we are only going to use one Whatsapp business account)
 
 If you were to use it, these would be the steps:
  
