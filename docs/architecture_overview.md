@@ -6,7 +6,7 @@ The Emission Reporting Chabot System architecture capitalizes on the synergies b
 
 1. **WhatsApp Interface (WhatsApp Business API)**: Serves as the pivotal interaction layer with users, streamlining the collection of emission data through intuitive text messaging. This component is significantly augmented by the integration with the Vonage API, which acts as a robust intermediary, facilitating seamless communication between the WhatsApp Business API and our system. The Vonage API ensures high reliability and global reach in messaging capabilities, enabling real-time, efficient data collection from users across diverse networks. This integration allows for the leveraging of advanced messaging features, such as message templates for quick replies or automated responses, enhancing user engagement and streamlining the data collection process.
 
-2. **Language Model (ChatGPT API)**: Harnesses the power of natural language understanding to interpret conversational inputs from users, structuring them into standardized formats suitable for further processing. This component is instrumental in transforming raw text into structured, actionable data.
+2. **Language Model**: Harnesses the power of natural language understanding to interpret conversational inputs from users, structuring them into standardized formats suitable for further processing. This component is instrumental in transforming raw text into structured, actionable data.
 
 3. **Data Processing Scripts (Serverless Functions)**: Positioned within the Azure environment, these scalable serverless functions are activated upon receiving structured data from the ChatGPT API. They are responsible for final data validations and formatting, ensuring the data is primed for storage and analysis.
 
