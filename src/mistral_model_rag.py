@@ -42,59 +42,55 @@ async def reply(question: Request):
     llm_question = body[b'Body'][0].decode()
 
     if from_number not in conversation_states:
-        conversation_states[from_number] = {"state": 1, "ask_mode": False, "question_mode": False}
+        conversation_states[from_number] = {"history": [1], "ask_mode": False, "question_mode": False, "last_system_question": ""}
 
-    # Initialize response with a default value
-    response = "I'm not sure how to process that. Can you please clarify?"
+    current_history = conversation_states[from_number]["history"]
+    current_state = current_history[-1]
+    last_system_question = conversation_states[from_number]["last_system_question"]
 
-    if llm_question.lower() == "solved" and conversation_states[from_number]["question_mode"]:
-        conversation_states[from_number]["question_mode"] = False
-        # Directly move to the next part of the conversation based on the current state
-        state = conversation_states[from_number]["state"]
-        if state == 1:
-            response = "What's your full name?"
-            conversation_states[from_number]["state"] += 1
-        elif state == 2:
-            response = "Where is your farm located?"
-            conversation_states[from_number]["state"] += 1
-        elif state == 3:
-            response = "How large is your farm?"
-            conversation_states[from_number]["state"] += 1
-        elif state == 4:
-            response = "Thank you for the information! You can now ask me any question."
-            conversation_states[from_number]["ask_mode"] = True
+    if llm_question.lower() == "solved":
+        # Repeat the last system-driven question instead of the user's last question
+        response = last_system_question if last_system_question else "Please start the report."
     elif llm_question.endswith("?"):
-        # Handling a question; the "question_mode" is set to True
         conversation_states[from_number]["question_mode"] = True
+        # Here, you might handle user-driven questions differently
         try:
             response = query_engine.query(llm_question)
         except Exception as e:
             logger.error(f"Error processing query: {e}")
+            response = "I'm sorry, I encountered an error processing your question. Please try again."
     else:
-        if not conversation_states[from_number]["ask_mode"] and not conversation_states[from_number]["question_mode"]:
-            # Proceeding through initial questions if not in ask_mode or question_mode
-            state = conversation_states[from_number]["state"]
-            if state == 1:
-                response = "What's your full name?"
-                conversation_states[from_number]["state"] += 1
-            elif state == 2:
-                response = "Where is your farm located?"
-                conversation_states[from_number]["state"] += 1
-            elif state == 3:
-                response = "How large is your farm?"
-                conversation_states[from_number]["state"] += 1
-            elif state == 4:
-                response = "Thank you for the information! You can now ask me any question."
-                conversation_states[from_number]["ask_mode"] = True
+        # Normal conversation flow
+        if not conversation_states[from_number]["ask_mode"]:
+            current_state += 1
+            current_history.append(current_state)
+            response = determine_response(current_state)
+            conversation_states[from_number]["last_system_question"] = response  # Update only on state-driven questions
         else:
-            # Handling a general inquiry when in ask_mode or after question_mode without a direct question
+            # Handling inquiries here, assuming they don't affect the last_system_question directly
             try:
                 response = query_engine.query(llm_question)
             except Exception as e:
                 logger.error(f"Error processing query: {e}")
+                response = "I'm sorry, I encountered an error processing your question. Please try again."
 
     send_message(MY_NUMBER, response)
     return {"message": response}
+
+def determine_response(state):
+    # Function to determine the response based on the current state
+    if state == 1:
+        return "X"
+    elif state == 2:
+        return "What's your full name?"
+    elif state == 3:
+        return "Where is your farm located?"
+    elif state == 4:
+        return "How large is your farm?"
+    elif state >= 5:
+        return "Thank you for the information! You can now ask me any question."
+    else:
+        return "I'm not sure what you're asking. Can you clarify?"
 
 def send_message(to_number, body_text):
     try:
