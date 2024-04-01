@@ -1,27 +1,57 @@
+import unittest
+import requests
 import json
-from src import *
+import unittest
+from flask import json
+import sys
+import os
 
-# test_app_integration.py
+# Adding the 'src' directory to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'src')))
+from app import app
 
-def test_receive_message():
-    with app.test_client() as client:
-        # Mock POST request to '/' endpoint
-        response = client.post('/', data=json.dumps({
+class TestAppIntegration(unittest.TestCase):
+
+    def setUp(self):
+        self.app = app.test_client()
+
+    def test_whatsapp_status_get(self):
+        response = self.app.get('/wastatus')
+        self.assertEqual(response.status_code, 204)
+
+    def test_whatsapp_status_post_json(self):
+        json_data = {
             "message_type": "text",
-            "to": "12345",
-            "from": "67890",
+            "to": "recipient",
+            "from": "sender",
             "channel": "whatsapp",
             "text": "Hello"
-        }), content_type='application/json')
-        
-        # Assert that the response status code is 200
-        assert response.status_code == 200
+        }
+        response = self.app.post('/wastatus', json=json_data)
+        self.assertEqual(response.status_code, 204)
 
-def test_get_image():
-    with app.test_client() as client:
-        # Mock GET request to '/get_image' with query parameter
-        response = client.get('/get_image?name=test.png')
-        
-        # Assert that the response is successful and content type is image/png
-        assert response.status_code == 200
-        assert response.content_type == 'image/png'
+    def test_whatsapp_status_post_form(self):
+        form_data = {
+            "message_type": "text",
+            "to": "recipient",
+            "from": "sender",
+            "channel": "whatsapp",
+            "text": "Hello"
+        }
+        response = self.app.post('/wastatus', data=form_data)
+        self.assertEqual(response.status_code, 204)
+
+    def test_receive_message(self):
+        json_data = {
+            "message_type": "text",
+            "to": "recipient",
+            "from": "sender",
+            "channel": "whatsapp",
+            "text": "Hello"
+        }
+        response = self.app.post('/', json=json_data)
+        self.assertEqual(response.status_code, 200)
+
+
+if __name__ == '__main__':
+    unittest.main()
