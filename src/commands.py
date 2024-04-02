@@ -198,31 +198,26 @@ def send_whatsapp_msg(destination_number, msg):
 
 
 
-def chatbot(req_data):
-    recipient = req_data['from']
-    user_message = str(req_data['text']).strip()
+def chatbot(req_data, destination_number):
+    question = str(req_data['text']).strip()  # Assuming req_data is a dictionary that contains the message text
+    recipient = destination_number
     openai.api_key = openai_key
-
-    # Script providing context for the Assistant's responses
-    script = "You are a helpful assistant knowledgeable about farming practices, designed to collect detailed reports from farmers about their farm conditions. Please ensure you collect accurate information on the farm's name, location, size, and any issues they're facing."
-
-    messages = [
-        {"role": "system", "content": script},
-        {"role": "user", "content": user_message}
-    ]
-
+    
     try:
-        send_whatsapp_msg(recipient, "Please wait, communicating with ChatGPT...")
+        send_whatsapp_msg(recipient, "Please wait, communicating to chatgpt...")
         chat_response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=messages
+            messages=[
+                {"role": "system", "content": "You are a helpful and kind AI Assistant."},
+                {"role": "user", "content": question}
+            ]
         )
-        reply = chat_response.choices[0].message['content']
-        logging.info(f"Answer received: {reply}")
-        return reply
+        reply = chat_response.choices[0].message.content
+        logging.info(f"answer received: {reply}")
+        send_whatsapp_msg(recipient, reply)  # Send the reply directly to the user
     except Exception as e:
-        logging.error(f"Error communicating with ChatGPT: {str(e)}")
-        return "Sorry, I encountered an error. Please try again later."
+        logging.error(f"ChatGPT Error: {str(e)}")
+        send_whatsapp_msg(recipient, "Sorry, I'm having trouble understanding that right now.")
 
 
 
@@ -249,14 +244,40 @@ def imagebot(req_data):
 
 
 def chatgpt_text(req_data):
-    question = str(req_data['text']).upper().strip()
+    question = str(req_data['text']).strip()
     destination_number = req_data['from']
     logging.info(f"Question received: {question}")
-    
-    # Use the updated chatbot function
-    msg = chatbot(req_data)
-    logging.info(f"Sending reply: {msg}")
-    send_whatsapp_msg(destination_number, msg)
+
+    # Construct the dictionary expected by chatbot
+    chatbot_req_data = {
+        'text': question,  # Or however you need to structure this according to chatbot's implementation
+        'from': destination_number
+    }
+
+    # Now call chatbot with the correctly structured single argument
+    if question.lower() == "start report" or destination_number in user_states:
+        process_message(chatbot_req_data)
+    elif question.split()[0].upper() == "IMAGE":
+        imgurl = imagebot(chatbot_req_data)
+        logging.info(f"Sending reply: {imgurl}")
+        send_whatsapp_img(destination_number, imgurl, caption=question)
+    elif question.upper() == "JOIN OPAL AMEND":
+        welcome_msg = (
+            "Welcome to ChatGPT powered by Vonage Messaging API.\n"
+            "To get more information about using this service, type *help*.\n"
+            "Since it is in beta version, please expect delay in receiving messages.\n"
+            "We are also working to fix an issue which is duplicate message sending.\n"
+            "You can now ask any question."
+        )
+        logging.info(f"Sending reply: {welcome_msg}")
+        send_whatsapp_msg(destination_number, welcome_msg)
+    # If none of the above, assume it is a general question and proceed with ChatGPT
+    else:
+        chat_response = chatbot(chatbot_req_data, destination_number)  # Corrected call to chatbot
+        logging.info(f"Sending reply: {chat_response}")
+        send_whatsapp_msg(destination_number, chat_response)
+
+# Additional functions such as send_whatsapp_img, imagebot, chatbot need to be defined accordingly.
 
 
 

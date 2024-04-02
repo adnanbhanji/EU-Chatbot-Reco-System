@@ -10,3 +10,4 @@ authorization_header = f"Basic {encoded_credentials}"
 
 
 print(authorization_header)
+
