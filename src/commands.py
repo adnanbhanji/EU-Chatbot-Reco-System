@@ -2,7 +2,7 @@ import requests, json
 from   requests.auth import HTTPBasicAuth
 import openai
 import logging
-from openai import RateLimitError
+from openai.error import RateLimitError
 import sys
 import os
 
