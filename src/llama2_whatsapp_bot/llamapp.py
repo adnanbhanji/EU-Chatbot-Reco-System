@@ -5,8 +5,8 @@ import requests
 
 class WhatsAppClient:
     API_URL = "https://graph.facebook.com/v18.0/"
-    WHATSAPP_API_TOKEN = ""
-    WHATSAPP_CLOUD_NUMBER_ID = ""  # Remove /messages from here
+    WHATSAPP_API_TOKEN = "EAAGSJRN7axMBOZCIIjoiR3OyhOZAt0MNodL4LatkBc0oULuq18hAdCIXKJB7NP5h6b34A7s4CoNPV7kOXebNJf0yGogFTLZCjcTuc34qZARdhCBMZA3TGo55ohRUqd2SvxgFdiOubPydZAMajfskDliHBZBEMlWDrUmqLejuazg98AiOnPIulzgUfbitRErw5RdGUScTp0NZBnqcrrrAT0ipnbvVdkwHmPCch9Lg"
+    WHATSAPP_CLOUD_NUMBER_ID = "258052860729653"  # Remove /messages from here
 
     def __init__(self):
         self.headers = {
@@ -33,7 +33,7 @@ class WhatsAppClient:
             return response.status_code
         return response.status_code
 
-os.environ["REPLICATE_API_TOKEN"] = ""    
+os.environ["REPLICATE_API_TOKEN"] = "r8_0Ml6wLeCfwCSYLtFXEgRNfHp6L95sCD26WheA"    
 llama2_13b_chat = "meta/llama-2-13b-chat:f4e2de70d66816a838a89eeeb621910adffb0dd0baba3976c96980970978018d"
 
 llm = Replicate(
@@ -51,6 +51,11 @@ questions = [
     ('finish', "Thank you for providing the information, you can continue with any doubt you have.")
     # Add more questions as needed
 ]
+# Define user_states to keep track of the current state of the conversation
+user_states = {}
+
+# Initialize user_interactions to track interruptions with questions
+user_interactions = {}
 
 # Define the questions dictionary for easy lookup
 questions_dict = {q[0]: q[1] for q in questions}
@@ -80,12 +85,29 @@ def msgrcvd():
     if not message:
         return "Message is required.", 400
 
-    destination_number = "34654431185"  # Replace with the recipient's WhatsApp ID
+    destination_number = "34654431185"  # This should be dynamically determined based on the incoming request
+
+    # Handle interruption with a direct question
+    if message.endswith("?"):
+        # Indicate that the user is asking an interruption question
+        user_interactions[destination_number] = 'question'
+        return handle_llama_interaction(message, destination_number)
+    elif message.lower() == 'solved' and user_interactions.get(destination_number) == 'question':
+        # Clear the interruption state
+        user_interactions.pop(destination_number)
+        # If 'solved' is received, repeat the current question instead of moving to the next
+        if destination_number in user_states:
+            current_state = user_states[destination_number]
+            if current_state:
+                # Repeat the same question
+                question = questions_dict.get(current_state, "Could not find the previous question.")
+                return ask_question((current_state, question), destination_number)
+            else:
+                return "There seems to be an error. Please start your report by typing 'start report'."
 
     # Check if the message starts with "start report" to initiate the report flow
     if message.lower() == 'start report':
-        # Start the conversation by asking the first question
-        user_states[destination_number] = 'start'  # Initialize state
+        user_states[destination_number] = 'start'
         next_question_key = get_next_question(user_states[destination_number])
         return ask_question((next_question_key, questions_dict[next_question_key]), destination_number)
 
@@ -94,32 +116,31 @@ def msgrcvd():
         current_state = user_states[destination_number]
         next_state = get_next_question(current_state)
         if next_state:
-            # Process the answer and ask the next question
             return process_answer(message, current_state, destination_number)
         else:
-            # If there's no next state, the conversation is assumed to be complete
-            user_states.pop(destination_number)
-            # You can also add a message to indicate the conversation/report is complete.
+            user_states.pop(destination_number)  # Conversation complete
             return "Report completed."
     else:
-        # If the user is not in the middle of answering questions, use LLaMA for the response
-        try:
-            # Invoke LLaMA model to get a response
-            answer = llm.invoke(message)
-            print("Message received:", message)
-            print("Response generated:", answer)
+        return "Please start your report by typing 'start report'."
 
-            # Use the obtained 'answer' to send the WhatsApp message
-            response_status = client.send_text_message(answer, destination_number)
-            if response_status != 200:
-                print(f"Failed to send WhatsApp message: HTTP {response_status}")
-                return f"Failed to send WhatsApp message: HTTP {response_status}", 500
-        except Exception as e:
-            print(f"Error processing message: {str(e)}")
-            return f"Error processing message: {str(e)}", 500
+def handle_llama_interaction(message, destination_number):
+    try:
+        # Directly use the response from the LLaMA model as the answer
+        answer = llm.invoke(input=message)  # Assuming this directly returns the text response
 
-        return message + "<p/>" + answer
+        print("Question received:", message)
+        print("LLaMA response:", answer)
 
+        # Send the LLaMA response back to the user
+        response_status = client.send_text_message(answer, destination_number)
+        if response_status != 200:
+            print(f"Failed to send WhatsApp message: HTTP {response_status}")
+            return f"Failed to send WhatsApp message: HTTP {response_status}", 500
+    except Exception as e:
+        print(f"Error processing question: {str(e)}")
+        return f"Error processing question: {str(e)}", 500
+
+    return "Question answered: " + answer
 
 def ask_question(question, destination_number):
     # Send the question
