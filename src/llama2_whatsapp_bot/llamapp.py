@@ -1,9 +1,7 @@
 from langchain_community.llms import Replicate  
-from flask import Flask
-from flask import request
+from flask import Flask, request
 import os
 import requests
-import json
 
 class WhatsAppClient:
     API_URL = "https://graph.facebook.com/v18.0/"
@@ -50,11 +48,27 @@ questions = [
     ('farm_name', "What's the name of your farm?"),
     ('location', "Where is your farm located? Please provide the address or GPS coordinates."),
     ('farm_area', "How large is your farm? Please specify in hectares."),
+    ('finish', "Thank you for providing the information, you can continue with any doubt you have.")
     # Add more questions as needed
 ]
 
 # Define the questions dictionary for easy lookup
 questions_dict = {q[0]: q[1] for q in questions}
+
+# Define user_states to keep track of the current state of the conversation
+user_states = {}
+
+# Define the state machine transitions
+state_transitions = {
+    'start': 'farm_name',
+    'farm_name': 'location',
+    'location': 'farm_area',
+    'farm_area': 'finish',
+    'finish': None  # End of the conversation
+}
+
+def get_next_question(current_state):
+    return state_transitions.get(current_state)
 
 @app.route("/")
 def hello_llama():
@@ -66,34 +80,67 @@ def msgrcvd():
     if not message:
         return "Message is required.", 400
 
+    destination_number = "34654431185"  # Replace with the recipient's WhatsApp ID
+
+    # Check if the message starts with "start report" to initiate the report flow
     if message.lower() == 'start report':
-        return ask_questions()
+        # Start the conversation by asking the first question
+        user_states[destination_number] = 'start'  # Initialize state
+        next_question_key = get_next_question(user_states[destination_number])
+        return ask_question((next_question_key, questions_dict[next_question_key]), destination_number)
 
-    try:
-        # Invoke LLaMA model to get a response
-        answer = llm.invoke(message)
-        print("Message received:", message)
-        print("Response generated:", answer)
+    # Check if the user is currently in the process of answering questions
+    if destination_number in user_states:
+        current_state = user_states[destination_number]
+        next_state = get_next_question(current_state)
+        if next_state:
+            # Process the answer and ask the next question
+            return process_answer(message, current_state, destination_number)
+        else:
+            # If there's no next state, the conversation is assumed to be complete
+            user_states.pop(destination_number)
+            # You can also add a message to indicate the conversation/report is complete.
+            return "Report completed."
+    else:
+        # If the user is not in the middle of answering questions, use LLaMA for the response
+        try:
+            # Invoke LLaMA model to get a response
+            answer = llm.invoke(message)
+            print("Message received:", message)
+            print("Response generated:", answer)
 
-        # Use the obtained 'answer' to send the WhatsApp message
-        response_status = client.send_text_message(answer, "34654431185")  # Ensure this is the recipient's WhatsApp ID
-        if response_status != 200:
-            print(f"Failed to send WhatsApp message: HTTP {response_status}")
-            return f"Failed to send WhatsApp message: HTTP {response_status}", 500
-    except Exception as e:
-        print(f"Error processing message: {str(e)}")
-        return f"Error processing message: {str(e)}", 500
+            # Use the obtained 'answer' to send the WhatsApp message
+            response_status = client.send_text_message(answer, destination_number)
+            if response_status != 200:
+                print(f"Failed to send WhatsApp message: HTTP {response_status}")
+                return f"Failed to send WhatsApp message: HTTP {response_status}", 500
+        except Exception as e:
+            print(f"Error processing message: {str(e)}")
+            return f"Error processing message: {str(e)}", 500
 
-    return message + "<p/>" + answer
+        return message + "<p/>" + answer
 
-def ask_questions():
-    # Send the first question
-    response_status = client.send_text_message(questions_dict[questions[0][0]], "34654431185")
+
+def ask_question(question, destination_number):
+    # Send the question
+    response_status = client.send_text_message(question[1], destination_number)
     if response_status != 200:
         print(f"Failed to send WhatsApp message: HTTP {response_status}")
         return f"Failed to send WhatsApp message: HTTP {response_status}", 500
 
-    return "Started report. Asking questions."
+    # Update user_states to keep track of the current state
+    user_states[destination_number] = question[0]
+    return "Asking question: " + question[1]
+
+def process_answer(answer, current_state, destination_number):
+    # Process the user's answer
+    next_question = get_next_question(current_state)
+    if next_question:
+        user_states[destination_number] = next_question
+        return ask_question((next_question, questions_dict[next_question]), destination_number)
+    else:
+        user_states.pop(destination_number)  # Remove the user state
+        return "Report completed."
 
 if __name__ == "__main__":
     app.run(debug=True)
