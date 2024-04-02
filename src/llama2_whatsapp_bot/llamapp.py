@@ -8,7 +8,7 @@ import json
 class WhatsAppClient:
     API_URL = "https://graph.facebook.com/v18.0/"
     WHATSAPP_API_TOKEN = ""
-    WHATSAPP_CLOUD_NUMBER_ID = "" 
+    WHATSAPP_CLOUD_NUMBER_ID = ""  # Remove /messages from here
 
     def __init__(self):
         self.headers = {
@@ -45,15 +45,29 @@ llm = Replicate(
 client = WhatsAppClient()
 app = Flask(__name__)
 
+# Define the questions for the report flow
+questions = [
+    ('farm_name', "What's the name of your farm?"),
+    ('location', "Where is your farm located? Please provide the address or GPS coordinates."),
+    ('farm_area', "How large is your farm? Please specify in hectares."),
+    # Add more questions as needed
+]
+
+# Define the questions dictionary for easy lookup
+questions_dict = {q[0]: q[1] for q in questions}
+
 @app.route("/")
 def hello_llama():
     return "<p>Hello Llama 2</p>"
 
 @app.route('/msgrcvd', methods=['POST', 'GET'])
-def msgrcvd():    
+def msgrcvd():
     message = request.args.get('message')
     if not message:
         return "Message is required.", 400
+
+    if message.lower() == 'start report':
+        return ask_questions()
 
     try:
         # Invoke LLaMA model to get a response
@@ -62,7 +76,7 @@ def msgrcvd():
         print("Response generated:", answer)
 
         # Use the obtained 'answer' to send the WhatsApp message
-        response_status = client.send_text_message(answer, "")  # Ensure this is the recipient's WhatsApp ID
+        response_status = client.send_text_message(answer, "34654431185")  # Ensure this is the recipient's WhatsApp ID
         if response_status != 200:
             print(f"Failed to send WhatsApp message: HTTP {response_status}")
             return f"Failed to send WhatsApp message: HTTP {response_status}", 500
@@ -72,7 +86,14 @@ def msgrcvd():
 
     return message + "<p/>" + answer
 
+def ask_questions():
+    # Send the first question
+    response_status = client.send_text_message(questions_dict[questions[0][0]], "34654431185")
+    if response_status != 200:
+        print(f"Failed to send WhatsApp message: HTTP {response_status}")
+        return f"Failed to send WhatsApp message: HTTP {response_status}", 500
 
+    return "Started report. Asking questions."
 
 if __name__ == "__main__":
     app.run(debug=True)
