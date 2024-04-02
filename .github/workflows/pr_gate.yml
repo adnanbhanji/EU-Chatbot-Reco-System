@@ -37,8 +37,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install .
-          pip install pytest # If you haven't installed pytest yet, unittest does not need this
+          pip install -r requirements.txt
 
       - name: Python version and dependency list
         run: |
