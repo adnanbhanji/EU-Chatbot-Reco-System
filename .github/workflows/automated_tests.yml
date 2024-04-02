@@ -1,19 +1,13 @@
-name: PR gate
+name: GPT Bot Automated Tests
 
 on:
   push:
     branches:
-      - main
+      - gpt-bot
 
   pull_request:
     branches:
-      - main
-
-  workflow_dispatch:
-    input:
-      tags:
-        description: "Tags to label this manual run (optional)"
-        default: "Manual run"
+      - gpt-bot
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -32,8 +26,8 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.x" # Replace 'x' with the specific version you're using
-          architecture: "x64" # Adjust this if you're using a different architecture
+          python-version: "3.12" 
+          architecture: "x64" 
 
       - name: Install dependencies
         run: |
