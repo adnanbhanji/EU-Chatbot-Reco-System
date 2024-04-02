@@ -26,7 +26,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Load your documents and create the index
-documents = SimpleDirectoryReader("/content/new/").load_data()
+documents = SimpleDirectoryReader("/Users/adnanbhanji/Documents/GitHub/EU-Chatbot-Reco-System/src/new").load_data()
 llm = LlamaCPP(model_url='https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf', temperature=0.1, max_new_tokens=256, context_window=3900)
 embed_model = LangchainEmbedding(HuggingFaceEmbeddings(model_name="thenlper/gte-large"))
 service_context = ServiceContext.from_defaults(chunk_size=256, llm=llm, embed_model=embed_model)
