@@ -21,7 +21,8 @@ For getting the first 3, you can follow this guide: https://developers.facebook.
     .\whatsapp-llama\Scripts\activate
     pip install langchain replicate flask requests uvicorn gunicorn
     ```
-After activating the virtual environment, install the necessary Python packages. Ensure your virtual environment is selected as the kernel if using an IDE.
+After activating the virtual environment, install the necessary Python packages. Ensure your virtual environment is selected as the kernel if using an IDE. You can do this by opening the Command Palette (Ctrl+Shift+P or Cmd+Shift+P on macOS) and type Python: Select Interpreter.
+Choose the Python interpreter that matches whatsapp-llama environment.
 
 ### Running the Chatbot
 
