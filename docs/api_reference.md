@@ -4,10 +4,6 @@
 
 This Flask application implements a chatbot designed to interact with users via WhatsApp for collecting farm-related information and answering queries using llama2 model. The chatbot guides users through a predefined set of questions to gather data about their farms and allows for ad-hoc querying post-report submission.
 
-## No Explicit Authentication
-
-The current implementation does not include an authentication mechanism for API requests. If deployed publicly, consider adding authentication to secure the endpoints.
-
 ## Endpoints
 
 The application provides a single endpoint to handle incoming messages from users and manage the conversation flow.
