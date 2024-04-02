@@ -1,56 +1,56 @@
-# API Reference
+# API Reference for Flask-based WhatsApp Chatbot
 
 ## Overview
 
-This API serves as the backend for a chatbot system designed to facilitate carbon emission reporting and user registration via WhatsApp. It integrates with OpenAI's GPT-3 for natural language processing and leverages the Vonage API for WhatsApp communication. The primary purpose of this API is to manage the flow of data between the chatbot and the user, ensuring a seamless registration and reporting process.
+This Flask application implements a chatbot designed to interact with users via WhatsApp for collecting farm-related information and answering queries using llama2 model. The chatbot guides users through a predefined set of questions to gather data about their farms and allows for ad-hoc querying post-report submission.
 
-## Authentication
+## No Explicit Authentication
 
-To authenticate with the API, users must provide a valid API key with each request. The API key should be included in the request header as follows:
-
-
-Replace `YOUR_API_KEY` with your actual API key. Contact the system administrator to obtain your API key if you do not already have one.
+The current implementation does not include an authentication mechanism for API requests. If deployed publicly, consider adding authentication to secure the endpoints.
 
 ## Endpoints
 
-### Endpoint 1: Start Registration Flow
-- **Method**: POST
-- **URL**: `/start-registration`
-- **Description**: Initiates the user registration process by asking for the user's full name via WhatsApp.
-- **Parameters**:
-  - `destination_number`: The WhatsApp number to which the registration prompt will be sent.
+The application provides a single endpoint to handle incoming messages from users and manage the conversation flow.
 
-### Endpoint 2: Continue Registration Flow
-- **Method**: POST
-- **URL**: `/continue-registration`
-- **Description**: Continues the registration process based on user input, collecting additional details like farm location and size.
-- **Parameters**:
-  - `destination_number`: The user's WhatsApp number.
-  - `message`: The message received from the user as part of the registration flow.
+### Message Received (`/msgrcvd`)
 
-### Endpoint 3: Start Report Flow
-- **Method**: POST
-- **URL**: `/start-report`
-- **Description**: Initiates the reporting process for users to report their farm's carbon emissions via WhatsApp.
-- **Parameters**:
-  - `destination_number`: The WhatsApp number to which the reporting prompt will be sent.
+- **Method**: GET
+- **URL**: `/msgrcvd`
+- **Description**: Processes incoming messages from users. It handles initiating and continuing the structured report flow, managing interruptions for ad-hoc questions, and resuming the flow post-interruption.
+- **Query Parameters**:
+  - `message`: The message received from the user, extracted from the query parameters.
 
-### Endpoint 4: Continue Report Flow
-- **Method**: POST
-- **URL**: `/continue-report`
-- **Description**: Processes the user's responses for the emission reporting, including handling questions and collecting emission data.
-- **Parameters**:
-  - `destination_number`: The user's WhatsApp number.
-  - `message`: The user's response or query related to the emission reporting.
+## Core Functionalities
 
-## Additional Functionalities
+### Structured Conversation Flow
 
-Besides the main registration and reporting flows, the API offers integration with OpenAI's GPT-3 to handle natural language queries and generate responses, providing an interactive chatbot experience. It also includes functionalities for image generation and the ability to send both text messages and images via WhatsApp, enhancing user engagement.
+Through a series of predefined questions, the chatbot collects specific information about the user's farm, including the farm's name, location, and area.
 
-- **Text-Based Queries (Chatbot Function)**: Leverages GPT-3 for answering user queries in natural language.
-- **Image Generation (Imagebot Function)**: Utilizes GPT-3's capabilities to generate images based on text descriptions.
-- **Message Sending Utilities**:
-  - `send_whatsapp_msg`: Sends a text message to a specified WhatsApp number.
-  - `send_whatsapp_img`: Sends an image to a specified WhatsApp number, enhancing the interactive experience.
+### Ad-hoc Query Handling with OpenAI's GPT
 
-This API is designed to be flexible and scalable, accommodating future expansions such as additional reporting categories, integration with other messaging platforms, and more advanced AI functionalities.
+Upon completing the structured flow or when receiving messages that end with a "?", the chatbot utilizes OpenAI's GPT models to generate responses, providing users with informative answers beyond the structured questions.
+
+### Conversation State Management
+
+The application maintains the state of each conversation, tracking which question a user is responding to and handling user interruptions for ad-hoc questions, ensuring a seamless conversation flow.
+
+## Handling Interruptions
+
+If a user's message ends with a "?", the chatbot temporarily exits the structured flow to process the query through GPT models. The flow resumes with the last unanswered question once the user types "solved".
+
+## Post-Flow Interaction
+
+After the structured conversation concludes with a "Thank you" message, users can continue to interact with the chatbot. They can ask additional questions, with the chatbot leveraging GPT models to respond.
+
+## Implementation Notes
+
+- The application uses the `Replicate` library for integrating with the llama2 model and the Facebook Graph API for sending messages via WhatsApp.
+- State management is handled through in-memory dictionaries (`user_states`, `user_responses`, and `user_interactions`), tracking the progress and interactions of each user.
+
+## Future Considerations
+
+For production deployment, consider implementing the following:
+- **Authentication**: Secure the endpoint to ensure that only authorized requests are processed.
+- **Persistent State Management**: Use a database to persistently track conversation states and user data, enhancing reliability and scalability.
+- **Error Handling and Logging**: Implement comprehensive error handling and logging mechanisms for better monitoring and troubleshooting.
+- **API Rate Limiting**: Introduce rate limiting to protect against abuse and ensure service availability.
