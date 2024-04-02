@@ -5,8 +5,8 @@ import requests
 
 class WhatsAppClient:
     API_URL = "https://graph.facebook.com/v18.0/"
-    WHATSAPP_API_TOKEN = "EAAGSJRN7axMBOZCIIjoiR3OyhOZAt0MNodL4LatkBc0oULuq18hAdCIXKJB7NP5h6b34A7s4CoNPV7kOXebNJf0yGogFTLZCjcTuc34qZARdhCBMZA3TGo55ohRUqd2SvxgFdiOubPydZAMajfskDliHBZBEMlWDrUmqLejuazg98AiOnPIulzgUfbitRErw5RdGUScTp0NZBnqcrrrAT0ipnbvVdkwHmPCch9Lg"
-    WHATSAPP_CLOUD_NUMBER_ID = "258052860729653"  # Remove /messages from here
+    WHATSAPP_API_TOKEN = ""
+    WHATSAPP_CLOUD_NUMBER_ID = ""  # Remove /messages from here
 
     def __init__(self):
         self.headers = {
@@ -33,7 +33,7 @@ class WhatsAppClient:
             return response.status_code
         return response.status_code
 
-os.environ["REPLICATE_API_TOKEN"] = "r8_0Ml6wLeCfwCSYLtFXEgRNfHp6L95sCD26WheA"    
+os.environ["REPLICATE_API_TOKEN"] = ""    
 llama2_13b_chat = "meta/llama-2-13b-chat:f4e2de70d66816a838a89eeeb621910adffb0dd0baba3976c96980970978018d"
 
 llm = Replicate(
@@ -90,7 +90,7 @@ def msgrcvd():
     if not message:
         return "Message is required.", 400
 
-    destination_number = "34654431185"  # This should be dynamically determined based on the incoming request
+    destination_number = ""  # This should be dynamically determined based on the incoming request
 
     # Handle interruption with a direct question
     if message.endswith("?"):
