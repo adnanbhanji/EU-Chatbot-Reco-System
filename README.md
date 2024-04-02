@@ -95,6 +95,8 @@ User guides and technical documentation can be found here.
 
 ### DEMO:
 - GPT whatsapp demo: https://drive.google.com/file/d/1ZdZFKwC7FdsoWqDSDwNN1BUNR34xbHax/view?usp=sharing
+- Assistant API in OpenAI demo:
+https://drive.google.com/file/d/1Eq-8KUUni_Jul1mZF2xl9mCbJYGRaZ_t/view?usp=sharing
 - Llama2 whatsapp demo: https://drive.google.com/file/d/1cb83jhmdXKi2ctPJBOPmq6Hrvki41uSL/view?usp=sharing
 We would like to express our gratitude to our mentors, collaborators, and data providers who contributed to the success of this project.
 
