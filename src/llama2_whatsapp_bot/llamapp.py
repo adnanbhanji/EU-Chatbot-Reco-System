@@ -2,6 +2,8 @@ from langchain_community.llms import Replicate
 from flask import Flask, request
 import os
 import requests
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 class WhatsAppClient:
     API_URL = "https://graph.facebook.com/v18.0/"
@@ -90,7 +92,7 @@ def msgrcvd():
     if not message:
         return "Message is required.", 400
 
-    destination_number = ""  # This should be dynamically determined based on the incoming request
+    destination_number = "34654431185"  # This should be dynamically determined based on the incoming request
 
     # Handle interruption with a direct question
     if message.endswith("?"):
@@ -161,14 +163,34 @@ def ask_question(question, destination_number):
 
 def prepare_summary(destination_number):
     responses = user_responses.get(destination_number, {})
-    summary_message = "Thank you for providing the information. Here's what you've shared:\n"
+    summary_message = "Thank you for providing the information. Here's what you've shared:\n\n"
     summary_message += f"Farm Name: {responses.get('farm_name', 'Not provided')}\n"
     summary_message += f"Location: {responses.get('location', 'Not provided')}\n"
     summary_message += f"Farm Area: {responses.get('farm_area', 'Not provided')}\n"
+
+    # PDF generation
+    filename = f"summary_{destination_number}.pdf"
+    c = canvas.Canvas(filename, pagesize=letter)
+    c.drawString(100, 750, "Farm Report Summary")
+    c.drawString(100, 730, "-----------------------------------")
     
-    # Send the summary message
-    client.send_text_message(summary_message, destination_number)
-    return "Summary sent."
+    # Adjust the starting Y position as needed
+    y_position = 710
+    for line in summary_message.split('\n'):
+        c.drawString(100, y_position, line)
+        y_position -= 20  # Adjust spacing between lines as needed
+
+    c.save()
+
+    # Here you can add logic to send this PDF via email, save to a database, or store in a cloud storage,
+    # For demonstration, it just prints a message to the console.
+    print(f"Summary PDF generated: {filename}")
+
+    # Optionally, send a notification message about the PDF creation instead of the summary text
+    notification_message = "Your farm report summary has been created and saved. Please check your email or dashboard."
+    client.send_text_message(notification_message, destination_number)
+
+    return "Summary PDF generated."
 
 def process_answer(answer, current_state, destination_number):
     # Ensure we have a place to store this user's responses
@@ -190,6 +212,8 @@ def process_answer(answer, current_state, destination_number):
         user_responses.pop(destination_number, None)  # Cleanup
         return summary
     return "Unexpected end of conversation."
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
