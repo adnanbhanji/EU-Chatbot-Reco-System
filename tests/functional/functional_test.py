@@ -13,6 +13,13 @@ class TestYourApplication(unittest.TestCase):
         # This runs once before all tests
         cls.client = TestClient(app)
 
+    def test_environment_variables_loaded(self):
+        """Ensure environment variables are loaded correctly."""
+        self.assertIsNotNone(os.getenv("TWILIO_ACCOUNT_SID"))
+        self.assertIsNotNone(os.getenv("TWILIO_AUTH_TOKEN"))
+        self.assertIsNotNone(os.getenv("TWILIO_NUMBER"))
+        self.assertIsNotNone(os.getenv("MY_NUMBER"))
+
     def test_environment_variables_format(self):
         """Test the format of critical environment variables."""
         twilio_sid = os.getenv("TWILIO_ACCOUNT_SID")
