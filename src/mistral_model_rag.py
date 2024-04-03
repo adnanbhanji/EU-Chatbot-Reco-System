@@ -12,6 +12,17 @@ import os
 
 load_dotenv()  # take environment variables from .env.
 
+
+# Initialize FastAPI and Twilio client
+app = FastAPI()
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+TWILIO_NUMBER = os.getenv("TWILIO_NUMBER")
+MY_NUMBER = os.getenv("MY_NUMBER")
+
+client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+twilio_number = TWILIO_NUMBER
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -23,15 +34,6 @@ service_context = ServiceContext.from_defaults(chunk_size=256, llm=llm, embed_mo
 index = VectorStoreIndex.from_documents(documents, service_context=service_context)
 query_engine = index.as_query_engine()
 
-# Initialize FastAPI and Twilio client
-app = FastAPI()
-TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
-TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
-TWILIO_NUMBER = os.getenv("TWILIO_NUMBER")
-MY_NUMBER = os.getenv("MY_NUMBER")
-
-client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-twilio_number = TWILIO_NUMBER
 conversation_states = {}
 @app.get("/")
 async def hello_world():
