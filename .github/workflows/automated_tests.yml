@@ -48,5 +48,5 @@ jobs:
 
       - name: Run unittests
         run: |
-          # python tests/unit/unit_test.py
-          python tests/functional/functional_test.py
+          python tests/unit/unit_test.py
+          # python tests/functional/functional_test.py
