@@ -47,6 +47,12 @@ jobs:
           pip list
 
       - name: Run unittests
+        env:
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_NUMBER: ${{ secrets.TWILIO_NUMBER }}
+          MY_NUMBER: ${{ secrets.MY_NUMBER }}
+          AUTH_TOKEN_NGROK: ${{ secrets.AUTH_TOKEN_NGROK }}
         run: |
           # python tests/unit/unit_test.py
           python tests/functional/functional_test.py
