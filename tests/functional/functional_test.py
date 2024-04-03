@@ -2,9 +2,10 @@ import unittest
 import os
 from fastapi.testclient import TestClient
 import sys
+from github import secrets  # Import the 'secrets' module
 
 # Adding the 'src' directory to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'src')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(_file_), '..', '..', 'src')))
 from mistral_model_rag import app  # Adjust the import according to your application structure
 
 class TestYourApplication(unittest.TestCase):
@@ -13,12 +14,18 @@ class TestYourApplication(unittest.TestCase):
         # This runs once before all tests
         cls.client = TestClient(app)
 
+        # Retrieve Twilio credentials from GitHub secrets
+        cls.twilio_account_sid = secrets.TWILIO_ACCOUNT_SID
+        cls.twilio_auth_token = secrets.TWILIO_AUTH_TOKEN
+        cls.twilio_number = secrets.TWILIO_NUMBER
+        cls.my_number = secrets.MY_NUMBER
+
     def test_environment_variables_loaded(self):
         """Ensure environment variables are loaded correctly."""
-        self.assertIsNotNone(os.getenv("TWILIO_ACCOUNT_SID"))
-        self.assertIsNotNone(os.getenv("TWILIO_AUTH_TOKEN"))
-        self.assertIsNotNone(os.getenv("TWILIO_NUMBER"))
-        self.assertIsNotNone(os.getenv("MY_NUMBER"))
+        self.assertIsNotNone(self.twilio_account_sid)
+        self.assertIsNotNone(self.twilio_auth_token)
+        self.assertIsNotNone(self.twilio_number)
+        self.assertIsNotNone(self.my_number)
 
     def test_environment_variables_format(self):
         """Test the format of critical environment variables."""
