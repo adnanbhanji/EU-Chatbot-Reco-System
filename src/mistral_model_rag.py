@@ -34,6 +34,9 @@ index = VectorStoreIndex.from_documents(documents, service_context=service_conte
 query_engine = index.as_query_engine()
 
 conversation_states = {}
+@app.get("/")
+async def hello_world():
+    return {"message": "Hello, World!"}
 
 @app.post("/")
 async def reply(question: Request):
@@ -102,3 +105,4 @@ def send_message(to_number, body_text):
         logger.info(f"Message sent to {to_number}: {message.body}")
     except Exception as e:
         logger.error(f"Error sending message to {to_number}: {e}")
+        
