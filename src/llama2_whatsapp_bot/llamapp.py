@@ -4,11 +4,11 @@ import os
 import requests
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
-
+from pdfdesign import generate_pdf
 class WhatsAppClient:
     API_URL = "https://graph.facebook.com/v18.0/"
-    WHATSAPP_API_TOKEN = ""
-    WHATSAPP_CLOUD_NUMBER_ID = ""  # Remove /messages from here
+    WHATSAPP_API_TOKEN = "EAAGSJRN7axMBO4qJsZAQ0GZC7ZAezhFuvY2v6ZB3OqMvgduVsh4KDD6jZCFw23yE57ft1P6v168Dk60cx62LwO9wh6xj2GZBqh1wO23oCkWTZAHGz9PlQBXFRZCehcg5ZAC7AOr7fY2s3j6Pj8AYtMoYzhr4fehsQ4t6SugX9smwS8YR1CLadqZBttwMhZACME1ZBAqErdQJgDQVL2MeG1hBkm7Qp7Y4UtO9pM3tBv4ZD"
+    WHATSAPP_CLOUD_NUMBER_ID = "258052860729653"  # Remove /messages from here
 
     def __init__(self):
         self.headers = {
@@ -35,7 +35,7 @@ class WhatsAppClient:
             return response.status_code
         return response.status_code
 
-os.environ["REPLICATE_API_TOKEN"] = ""    
+os.environ["REPLICATE_API_TOKEN"] = "r8_3Yap4jKktUzu3jlN4dXojKdrknYvNHQ3DWyLx"    
 llama2_13b_chat = "meta/llama-2-13b-chat:f4e2de70d66816a838a89eeeb621910adffb0dd0baba3976c96980970978018d"
 
 llm = Replicate(
@@ -48,15 +48,20 @@ app = Flask(__name__)
 # Define the questions for the report flow
 questions = [
     ('farm_name', "What's the name of your farm?"),
+    ('owner_name', "What is your name?"),
     ('location', "Where is your farm located? Please provide the address or GPS coordinates."),
     ('farm_area', "How large is your farm? Please specify in hectares."),
-    ('finish', "Thank you for providing the information, you can continue with any doubt you have.")
-    # Add more questions as needed
+    ('num_cows', "How many dairy cows are on your farm?"),
+    ('methane_emissions', "What are the farm's total methane emissions in kg CO2-eq?"),
+    ('methane_calculation', "How were these methane emissions calculated? Please specify the method."),
+    ('electricity_consumption', "How much electricity does your farm consume in kWh?"),
+    ('fuel_consumption', "How much fuel does your farm consume? Please specify in L/m3."),
+    ('fuel_type', "What type of fuel does your farm use?"),
+    ('declaration_date', "Please provide the date of this declaration."),
+    ('finish', "Thank you for providing the information. You can continue with any doubt you have."),
 ]
 # Define user_states to keep track of the current state of the conversation
 user_states = {}
-
-
 
 # Initialize user_interactions to track interruptions with questions
 user_interactions = {}
@@ -64,18 +69,23 @@ user_interactions = {}
 # Define the questions dictionary for easy lookup
 questions_dict = {q[0]: q[1] for q in questions}
 
-# Define user_states to keep track of the current state of the conversation
-user_states = {}
-
 user_responses = {}
 
 
 # Define the state machine transitions
 state_transitions = {
     'start': 'farm_name',
-    'farm_name': 'location',
+    'farm_name': 'owner_name',
+    'owner_name': 'location',
     'location': 'farm_area',
-    'farm_area': 'finish',
+    'farm_area': 'num_cows',
+    'num_cows': 'methane_emissions',
+    'methane_emissions': 'methane_calculation',
+    'methane_calculation': 'electricity_consumption',
+    'electricity_consumption': 'fuel_consumption',
+    'fuel_consumption': 'fuel_type',
+    'fuel_type': 'declaration_date',
+    'declaration_date': 'finish',
     'finish': None  # End of the conversation
 }
 
@@ -161,36 +171,38 @@ def ask_question(question, destination_number):
     user_states[destination_number] = question[0]
     return "Asking question: " + question[1]
 
+# Adjustments in the prepare_summary function to ensure all variables are correctly included
 def prepare_summary(destination_number):
     responses = user_responses.get(destination_number, {})
-    summary_message = "Thank you for providing the information. Here's what you've shared:\n\n"
-    summary_message += f"Farm Name: {responses.get('farm_name', 'Not provided')}\n"
-    summary_message += f"Location: {responses.get('location', 'Not provided')}\n"
-    summary_message += f"Farm Area: {responses.get('farm_area', 'Not provided')}\n"
 
-    # PDF generation
-    filename = f"summary_{destination_number}.pdf"
-    c = canvas.Canvas(filename, pagesize=letter)
-    c.drawString(100, 750, "Farm Report Summary")
-    c.drawString(100, 730, "-----------------------------------")
-    
-    # Adjust the starting Y position as needed
-    y_position = 710
-    for line in summary_message.split('\n'):
-        c.drawString(100, y_position, line)
-        y_position -= 20  # Adjust spacing between lines as needed
+    # Format the responses to match the expected structure by generate_pdf
+    # Assuming `generate_pdf` expects a flat dictionary with specific keys
+    formatted_responses = {
+        'farm_name': responses.get('farm_name', 'Not provided'),
+        'owner_name': responses.get('owner_name', 'Not provided'),
+        'location': responses.get('location', 'Not provided'),
+        'farm_area': responses.get('farm_area', 'Not provided'),
+        'num_cows': responses.get('num_cows', 'Not provided'),
+        'methane_emissions': responses.get('methane_emissions', 'Not provided'),
+        'methane_calculation': responses.get('methane_calculation', 'Not provided'),
+        'electricity_consumption': responses.get('electricity_consumption', 'Not provided'),
+        'fuel_consumption': responses.get('fuel_consumption', 'Not provided'),
+        'fuel_type': responses.get('fuel_type', 'Not provided'),
+        'declaration_date': responses.get('declaration_date', 'Not provided'),
+    }
 
-    c.save()
+    fileName = f"Farm_Report_{destination_number}.pdf"
+    documentTitle = "Farm Report Summary"
 
-    # Here you can add logic to send this PDF via email, save to a database, or store in a cloud storage,
-    # For demonstration, it just prints a message to the console.
-    print(f"Summary PDF generated: {filename}")
+    # Ensure `generate_pdf` is correctly called with the formatted_responses
+    generate_pdf(formatted_responses, fileName, documentTitle)
 
-    # Optionally, send a notification message about the PDF creation instead of the summary text
-    notification_message = "Your farm report summary has been created and saved. Please check your email or dashboard."
+    notification_message = "Your farm report summary has been created. Please check your email or dashboard."
     client.send_text_message(notification_message, destination_number)
 
     return "Summary PDF generated."
+
+
 
 def process_answer(answer, current_state, destination_number):
     # Ensure we have a place to store this user's responses
@@ -203,16 +215,20 @@ def process_answer(answer, current_state, destination_number):
     next_question = get_next_question(current_state)
     if next_question:
         user_states[destination_number] = next_question
-        if next_question != 'finish':  # If there's a next question that is not the final message
+        # Check if we've reached the 'finish' state to send the thank you message
+        if next_question == 'finish':  # Before concluding the conversation
+            final_message = questions_dict[next_question]  # Get the final thank you message
+            client.send_text_message(final_message, destination_number)
+            summary = prepare_summary(destination_number)  # Generate and send the report
+            user_states.pop(destination_number, None)  # Cleanup
+            user_responses.pop(destination_number, None)  # Cleanup
+            return summary
+        else:  # If not the final message, ask the next question
             return ask_question((next_question, questions_dict[next_question]), destination_number)
-    # If no more questions or reaching 'finish', prepare summary
-    if current_state == 'farm_area' or next_question is None:  # Adjust this condition as needed
-        summary = prepare_summary(destination_number)
+    else:
+        # If there's no next question and we somehow missed 'finish', conclude
         user_states.pop(destination_number, None)  # Cleanup
-        user_responses.pop(destination_number, None)  # Cleanup
-        return summary
-    return "Unexpected end of conversation."
-
+        return "Unexpected end of conversation."
 
 
 if __name__ == "__main__":
