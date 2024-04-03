@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   test:
-    name: Run Python Unit Tests
+    name: Custom Bot Automated Unit&Functional Tests
     runs-on: ubuntu-latest
     timeout-minutes: 40
 
@@ -39,7 +39,7 @@ jobs:
           which python
           pip list
 
-      - name: Run unittests
+      - name: Run tests
         env:
           TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
           TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
