@@ -9,15 +9,16 @@ from twilio.rest import Client
 import logging
 from dotenv import load_dotenv
 import os
+from github import secrets
 
 load_dotenv()  # take environment variables from .env.
 
 # Initialize FastAPI and Twilio client
 app = FastAPI()
-TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
-TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
-TWILIO_NUMBER = os.getenv("TWILIO_NUMBER")
-MY_NUMBER = os.getenv("MY_NUMBER")
+TWILIO_ACCOUNT_SID = secrets.TWILIO_ACCOUNT_SID
+TWILIO_AUTH_TOKEN = secrets.TWILIO_AUTH_TOKEN
+TWILIO_NUMBER = secrets.TWILIO_NUMBER
+MY_NUMBER = secrets.MY_NUMBER
 
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 twilio_number = TWILIO_NUMBER
