@@ -5,8 +5,8 @@ import requests
 
 class WhatsAppClient:
     API_URL = "https://graph.facebook.com/v18.0/"
-    WHATSAPP_API_TOKEN = ""
-    WHATSAPP_CLOUD_NUMBER_ID = ""  # Remove /messages from here
+    WHATSAPP_API_TOKEN = "EAAGSJRN7axMBOZCIIjoiR3OyhOZAt0MNodL4LatkBc0oULuq18hAdCIXKJB7NP5h6b34A7s4CoNPV7kOXebNJf0yGogFTLZCjcTuc34qZARdhCBMZA3TGo55ohRUqd2SvxgFdiOubPydZAMajfskDliHBZBEMlWDrUmqLejuazg98AiOnPIulzgUfbitRErw5RdGUScTp0NZBnqcrrrAT0ipnbvVdkwHmPCch9Lg"
+    WHATSAPP_CLOUD_NUMBER_ID = "258052860729653"  # Remove /messages from here
 
     def __init__(self):
         self.headers = {
@@ -33,7 +33,7 @@ class WhatsAppClient:
             return response.status_code
         return response.status_code
 
-os.environ["REPLICATE_API_TOKEN"] = ""    
+os.environ["REPLICATE_API_TOKEN"] = "r8_0Ml6wLeCfwCSYLtFXEgRNfHp6L95sCD26WheA"    
 llama2_13b_chat = "meta/llama-2-13b-chat:f4e2de70d66816a838a89eeeb621910adffb0dd0baba3976c96980970978018d"
 
 llm = Replicate(
@@ -90,62 +90,50 @@ def msgrcvd():
     if not message:
         return "Message is required.", 400
 
-    destination_number = ""  # This should be dynamically determined based on the incoming request
+    destination_number = "34654431185"  # This should be dynamically determined based on the incoming request
 
-    # Handle interruption with a direct question
-    if message.endswith("?"):
-        # Indicate that the user is asking an interruption question
-        user_interactions[destination_number] = 'question'
-        return handle_llama_interaction(message, destination_number)
-    elif message.lower() == 'solved' and user_interactions.get(destination_number) == 'question':
-        # Clear the interruption state
-        user_interactions.pop(destination_number)
-        # If 'solved' is received, repeat the current question instead of moving to the next
-        if destination_number in user_states:
-            current_state = user_states[destination_number]
-            if current_state:
-                # Repeat the same question
-                question = questions_dict.get(current_state, "Could not find the previous question.")
-                return ask_question((current_state, question), destination_number)
-            else:
-                return "There seems to be an error. Please start your report by typing 'start report'."
+    # Handle all interactions through LLaMA, using a script for context.
+    return handle_llama_interaction(message, destination_number)
 
-    # Check if the message starts with "start report" to initiate the report flow
-    if message.lower() == 'start report':
-        user_states[destination_number] = 'start'
-        next_question_key = get_next_question(user_states[destination_number])
-        return ask_question((next_question_key, questions_dict[next_question_key]), destination_number)
 
-    # Check if the user is currently in the process of answering questions
-    if destination_number in user_states:
-        current_state = user_states[destination_number]
-        next_state = get_next_question(current_state)
-        if next_state:
-            return process_answer(message, current_state, destination_number)
-        else:
-            user_states.pop(destination_number)  # Conversation complete
-            return "Report completed."
-    else:
-        return "Please start your report by typing 'start report'."
+# This dictionary holds the conversation history for each user
+conversation_history = {}
 
-def handle_llama_interaction(message, destination_number):
+def handle_llama_interaction(user_message, destination_number):
+    script = ("You are a helpful assistant knowledgeable about farming practices, "
+              "designed to collect detailed reports from farmers about their farm conditions. "
+              "Please ensure you collect accurate information on the farm's name, location, size, "
+              "and any issues they're facing.")
+    
+    # Retrieve the existing conversation history
+    history = conversation_history.get(destination_number, [])
+
+    # Add the system message and the user's latest message to the history
+    if not history:
+        history.append({"role": "system", "content": script})
+    history.append({"role": "user", "content": user_message})
+    
     try:
-        # Directly use the response from the LLaMA model as the answer
-        answer = llm.invoke(input=message)  # Assuming this directly returns the text response
+        # Invoke the LLaMA model to get a response, passing 'input' as expected
+        response = llm.invoke(input=[msg for msg in history])
+        # Assuming 'response' contains the response text directly
+        assistant_message = response if isinstance(response, str) else "Sorry, I couldn't generate a response."
 
-        print("Question received:", message)
-        print("LLaMA response:", answer)
+        # Update the conversation history with the assistant's response
+        conversation_history[destination_number] = history + [{"role": "assistant", "content": assistant_message}]
 
-        # Send the LLaMA response back to the user
-        response_status = client.send_text_message(answer, destination_number)
+        # Send the LLaMA's reply back to the user
+        response_status = client.send_text_message(assistant_message, destination_number)
         if response_status != 200:
             print(f"Failed to send WhatsApp message: HTTP {response_status}")
             return f"Failed to send WhatsApp message: HTTP {response_status}", 500
     except Exception as e:
-        print(f"Error processing question: {str(e)}")
-        return f"Error processing question: {str(e)}", 500
+        print(f"Error processing message with LLaMA: {str(e)}")
+        return f"Error processing message with LLaMA: {str(e)}", 500
 
-    return "Question answered: " + answer
+    return assistant_message
+
+
 
 
 def ask_question(question, destination_number):
@@ -170,6 +158,7 @@ def prepare_summary(destination_number):
     client.send_text_message(summary_message, destination_number)
     return "Summary sent."
 
+
 def process_answer(answer, current_state, destination_number):
     # Ensure we have a place to store this user's responses
     if destination_number not in user_responses:
@@ -190,6 +179,8 @@ def process_answer(answer, current_state, destination_number):
         user_responses.pop(destination_number, None)  # Cleanup
         return summary
     return "Unexpected end of conversation."
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
