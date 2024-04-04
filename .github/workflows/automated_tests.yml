@@ -3,11 +3,11 @@ name: Custom Bot Automated Tests
 on:
   push:
     branches:
-      - custom-bot-whatsapp
+      - custom-bot
 
   pull_request:
     branches:
-      - custom-bot-whatsapp
+      - custom-bot
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
