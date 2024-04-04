@@ -17,7 +17,7 @@ https://drive.google.com/file/d/1cb83jhmdXKi2ctPJBOPmq6Hrvki41uSL/view?usp=shari
 - Llama2 pdf generation demo:
 https://drive.google.com/file/d/1WleJoD2pT-zISK-KBZdTvIbic0-NF919/view?usp=sharing
 - Llama2 assistant API script demo:
-https://drive.google.com/file/d/1T6HeYUsWcL1cfIdWAESetPJxpxpzgDjl/view?usp=sharing
+https://drive.google.com/file/d/1_LHfGJ9ZW5-86XqDiZuJiYAVePHeiqIq/view?usp=sharing
 #### Custom Bot - Mistral 7B DEMOS
 - Custom Bot - Mistral 7B Demo - https://drive.google.com/file/d/1ds-UP7tHiHGfrp6MMGlBW1GmEHa17gnt/view?usp=sharing
 
