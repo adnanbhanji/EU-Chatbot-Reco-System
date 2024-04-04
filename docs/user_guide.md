@@ -12,7 +12,7 @@ Interacting with our chatbot is straightforward. Here’s how you can get starte
 
 1. **Initiate Registration**: Begin by sending a message that says `"start registration"` to the chatbot on WhatsApp.
 2. **Follow Prompts**: The chatbot will prompt you with a series of questions necessary for the registration process. Please provide your responses to each question accordingly.
-3. **Ask Questions If Needed**: If you have any questions or need clarification during the registration process, feel free to ask. The chatbot, powered by ChatGPT, is designed to understand your queries and provide you with the necessary information or guidance.
+3. **Ask Questions If Needed**: If you have any questions or need clarification during the registration process, feel free to ask. The chatbot, powered by Mistral 7B, is designed to understand your queries and provide you with the necessary information or guidance.
 
 ### Submitting a Report
 
@@ -23,7 +23,7 @@ Interacting with our chatbot is straightforward. Here’s how you can get starte
 ### Additional Tips
 
 - **Direct Commands**: Utilize simple, direct commands such as "start registration" or "start report" to initiate specific processes.
-- **Natural Language Inquiries**: Feel free to use natural language when asking questions or seeking assistance. Our chatbot, integrated with ChatGPT, is adept at interpreting and responding to a wide range of inquiries.
+- **Natural Language Inquiries**: Feel free to use natural language when asking questions or seeking assistance. Our chatbot, integrated with Mistral 7B, is adept at interpreting and responding to a wide range of inquiries.
 - **Patience with Responses**: While our chatbot is designed for efficiency, complex questions may require a bit more time for processing and response. We appreciate your patience.
 
 ## Conclusion

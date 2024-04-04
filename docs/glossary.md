@@ -1,9 +1,5 @@
 # Glossary
 
-- **ChatGPT**: An advanced language generation model developed by OpenAI, capable of understanding and generating human-like text based on the input it receives. It powers the natural language processing capabilities of the chatbot.
-
-- **Vonage API**: A cloud communication platform that provides messaging, voice, and video services. In the context of this project, it is used to facilitate communication between the WhatsApp Business API and the chatbot, enabling the sending and receiving of WhatsApp messages.
-
 - **WhatsApp Business API**: An API provided by WhatsApp that allows businesses to communicate with their customers in a secure, reliable, and scalable way. It is used by the project to interact with users through WhatsApp.
 
 - **Azure Cloud Services**: A collection of cloud computing services provided by Microsoft, offering solutions for computing, analytics, storage, and networking. Azure hosts the backend services and data storage for the chatbot project.
