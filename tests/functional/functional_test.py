@@ -5,7 +5,7 @@ import sys
 
 # Adding the 'src' directory to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'src')))
-from mistral_model_rag import app  # Adjust the import according to your application structure
+from mistral_model_rag_final import app  # Adjust the import according to your application structure
 
 class TestYourApplication(unittest.TestCase):
     @classmethod
