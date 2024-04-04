@@ -1,7 +1,7 @@
 # Vonage accounts
 endpoint_vonage_message_sandbox = "https://messages-sandbox.nexmo.com/v0.1/messages"
 endpoint_vonage_message_send = "https://messages-sandbox.nexmo.com/v1/messages"
-vonage_sandbox_number = "14157386102"  # Replace with your actual Vonage sandbox number
+vonage_sandbox_number = ""  # Replace with your actual Vonage sandbox number
 vonage_authorization_header = ""  # The base64-encoded credentials
 
 
