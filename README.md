@@ -21,6 +21,13 @@ https://drive.google.com/file/d/1T6HeYUsWcL1cfIdWAESetPJxpxpzgDjl/view?usp=shari
 #### Custom Bot - Mistral 7B DEMOS
 - Custom Bot - Mistral 7B Demo - https://drive.google.com/file/d/1ds-UP7tHiHGfrp6MMGlBW1GmEHa17gnt/view?usp=sharing
 
+### Main Development Branch for each model:
+GPT - [gpt-bot](https://github.com/adnanbhanji/EU-Chatbot-Reco-System/tree/gpt-bot)
+
+Llama2 - [llama2-bot](https://github.com/adnanbhanji/EU-Chatbot-Reco-System/tree/llama2-bot)
+
+Custom Mistral 7B - [custom-bot](https://github.com/adnanbhanji/EU-Chatbot-Reco-System/tree/custom-bot)
+
 ### 🔑 Key Features & Benefits:
 
 - **Dynamic Reporting**: Utilise Natural Language Processing (NLP) and AI to send and receive text messages via WhatsApp, which auto-populate the carbon emission report with real-time data.
