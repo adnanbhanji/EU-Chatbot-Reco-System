@@ -1,0 +1,51 @@
+name: Custom Bot Automated Tests
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Custom Bot Automated Unit&Functional Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.12"
+          architecture: "x64"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Python version and dependency list
+        run: |
+          python --version
+          which python
+          pip list
+
+      - name: Run tests
+        env:
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_NUMBER: ${{ secrets.TWILIO_NUMBER }}
+          MY_NUMBER: ${{ secrets.MY_NUMBER }}
+          AUTH_TOKEN_NGROK: ${{ secrets.AUTH_TOKEN_NGROK }}
+        run: |
+          python tests/unit/unit_test.py
+          python tests/functional/functional_test.py
