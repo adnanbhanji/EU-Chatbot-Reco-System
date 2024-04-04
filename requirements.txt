@@ -18,3 +18,6 @@ llama-index-embeddings-huggingface
 llama-index-llms-llama-cpp
 llama-index-embeddings-langchain
 PyGithub
+reportlab
+weasyprint
+datetime
