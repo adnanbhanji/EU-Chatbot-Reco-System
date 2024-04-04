@@ -27,7 +27,7 @@ class TestYourApplication(unittest.TestCase):
 
     def test_document_existence(self):
         """Test if the specified document exists in the directory."""
-        document_path = "./src/new/CO2Emissions-Europe.pdf"
+        document_path = "./src/dataset/CO2Emissions-Europe.pdf"
         self.assertTrue(os.path.exists(document_path), f"Document does not exist: {document_path}")
 
     def test_api_endpoint(self):
