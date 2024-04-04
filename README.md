@@ -1,12 +1,25 @@
 # EU-Chatbot-Reco-System
 
 ### 🌍 The Challenge:
-
 Compliance with EU Commission environmental carbon emission reporting mandates can be a laborious process, prone to human error, and costly in terms of time and resources.
 
 ### 🤖 The Solution:
-
 Introducing the WhatsApp-based chatbot designed to streamline and simplify carbon emission reporting, ensuring compliance with EU Commission standards.
+
+### DEMO:
+#### GPT DEMOS
+- GPT whatsapp demo: https://drive.google.com/file/d/1ZdZFKwC7FdsoWqDSDwNN1BUNR34xbHax/view?usp=sharing
+- Assistant API in OpenAI demo:
+https://drive.google.com/file/d/1Eq-8KUUni_Jul1mZF2xl9mCbJYGRaZ_t/view?usp=sharing
+#### LLama2 DEMOS
+- Llama2 connection with whatsapp demo:
+https://drive.google.com/file/d/1cb83jhmdXKi2ctPJBOPmq6Hrvki41uSL/view?usp=sharing
+- Llama2 pdf generation demo:
+https://drive.google.com/file/d/1WleJoD2pT-zISK-KBZdTvIbic0-NF919/view?usp=sharing
+- Llama2 assistant API script demo:
+https://drive.google.com/file/d/1T6HeYUsWcL1cfIdWAESetPJxpxpzgDjl/view?usp=sharing
+#### Custom Bot - Mistral 7B DEMOS
+- Custom Bot - Mistral 7B Demo - https://drive.google.com/file/d/1ds-UP7tHiHGfrp6MMGlBW1GmEHa17gnt/view?usp=sharing
 
 ### 🔑 Key Features & Benefits:
 
@@ -92,18 +105,7 @@ User guides and technical documentation can be found here.
 - Hussein Soliman: MLOps Engineer
 
 ### 🙏 Acknowledgments:
-
-### DEMO:
-- GPT whatsapp demo: https://drive.google.com/file/d/1ZdZFKwC7FdsoWqDSDwNN1BUNR34xbHax/view?usp=sharing
-- Assistant API in OpenAI demo:
-https://drive.google.com/file/d/1Eq-8KUUni_Jul1mZF2xl9mCbJYGRaZ_t/view?usp=sharing
-- Llama2 connection with whatsapp demo:
-https://drive.google.com/file/d/1cb83jhmdXKi2ctPJBOPmq6Hrvki41uSL/view?usp=sharing
-- Llama2 pdf generation demo:
-https://drive.google.com/file/d/1WleJoD2pT-zISK-KBZdTvIbic0-NF919/view?usp=sharing
-- Llama2 assistant API script demo:
-https://drive.google.com/file/d/1T6HeYUsWcL1cfIdWAESetPJxpxpzgDjl/view?usp=sharing
-
+...
 We would like to express our gratitude to our mentors, collaborators, and data providers who contributed to the success of this project.
 ### 📜 Appendix:
 
