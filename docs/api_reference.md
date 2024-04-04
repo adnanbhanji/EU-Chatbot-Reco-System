@@ -22,9 +22,9 @@ The application provides a single endpoint to handle incoming messages from user
 
 Through a series of predefined questions, the chatbot collects specific information about the user's farm, including the farm's name, location, and area.
 
-### Ad-hoc Query Handling with OpenAI's GPT
+### Ad-hoc Query Handling with Llama2
 
-Upon completing the structured flow or when receiving messages that end with a "?", the chatbot utilizes OpenAI's GPT models to generate responses, providing users with informative answers beyond the structured questions.
+Upon completing the structured flow or when receiving messages that end with a "?", the chatbot utilizes Llama2's models to generate responses, providing users with informative answers beyond the structured questions.
 
 ### Conversation State Management
 
@@ -32,11 +32,11 @@ The application maintains the state of each conversation, tracking which questio
 
 ## Handling Interruptions
 
-If a user's message ends with a "?", the chatbot temporarily exits the structured flow to process the query through GPT models. The flow resumes with the last unanswered question once the user types "solved".
+If a user's message ends with a "?", the chatbot temporarily exits the structured flow to process the query through Llama2 models. The flow resumes with the last unanswered question once the user types "solved".
 
 ## Post-Flow Interaction
 
-After the structured conversation concludes with a "Thank you" message, users can continue to interact with the chatbot. They can ask additional questions, with the chatbot leveraging GPT models to respond.
+After the structured conversation concludes with a "Thank you" message, users can continue to interact with the chatbot. They can ask additional questions, with the chatbot leveraging Llama2 models to respond.
 
 ## Implementation Notes
 
