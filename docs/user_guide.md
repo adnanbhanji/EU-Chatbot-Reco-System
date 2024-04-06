@@ -12,7 +12,8 @@ Interacting with our chatbot is straightforward. Here’s how you can get starte
 
 1. **Initiate Report Submission**: To start submitting a report, type `"start report"` and send it to the chatbot.
 2. **Answer Questions**: The chatbot will present you with a series of questions related to the report you wish to submit. Please answer each question accurately to ensure the report is comprehensive.
-3. **Interactive Guidance**: If you're unsure about any question or require further information while filling out the report, simply ask your question. The chatbot is there to assist you by providing explanations or additional details to help you complete the report successfully. When you finish just type "solved" and the chatbot will continue with the question it had previously asked. 
+3. **Interactive Guidance**: If you're unsure about any question or require further information while filling out the report, simply ask your question. The chatbot is there to assist you by providing explanations or additional details to help you complete the report successfully. When you finish just type "solved" and the chatbot will continue with the question it had previously asked.
+4. At the end of the conversation flow, your farm report summary will be automatically created.
 
 ### Additional Tips
 
