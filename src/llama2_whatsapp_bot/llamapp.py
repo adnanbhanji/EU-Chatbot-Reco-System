@@ -7,9 +7,9 @@ from reportlab.pdfgen import canvas
 from pdfdesign import generate_pdf
 class WhatsAppClient:
     API_URL = "https://graph.facebook.com/v18.0/"
-    WHATSAPP_API_TOKEN = "EAAGSJRN7axMBO4qJsZAQ0GZC7ZAezhFuvY2v6ZB3OqMvgduVsh4KDD6jZCFw23yE57ft1P6v168Dk60cx62LwO9wh6xj2GZBqh1wO23oCkWTZAHGz9PlQBXFRZCehcg5ZAC7AOr7fY2s3j6Pj8AYtMoYzhr4fehsQ4t6SugX9smwS8YR1CLadqZBttwMhZACME1ZBAqErdQJgDQVL2MeG1hBkm7Qp7Y4UtO9pM3tBv4ZD"
-    WHATSAPP_CLOUD_NUMBER_ID = "258052860729653"  # Remove /messages from here
-
+    WHATSAPP_API_TOKEN = os.getenv("WHATSAPP_API_TOKEN")
+    WHATSAPP_CLOUD_NUMBER_ID = os.getenv("WHATSAPP_CLOUD_NUMBER_ID")  
+    
     def __init__(self):
         self.headers = {
             "Authorization": f"Bearer {self.WHATSAPP_API_TOKEN}",
@@ -35,7 +35,7 @@ class WhatsAppClient:
             return response.status_code
         return response.status_code
 
-os.environ["REPLICATE_API_TOKEN"] = "r8_3Yap4jKktUzu3jlN4dXojKdrknYvNHQ3DWyLx"    
+os.environ["REPLICATE_API_TOKEN"] = os.getenv("REPLICATE_API_TOKEN")
 llama2_13b_chat = "meta/llama-2-13b-chat:f4e2de70d66816a838a89eeeb621910adffb0dd0baba3976c96980970978018d"
 
 llm = Replicate(
@@ -201,8 +201,7 @@ def prepare_summary(destination_number):
     client.send_text_message(notification_message, destination_number)
 
     return "Summary PDF generated."
-
-
+    
 
 def process_answer(answer, current_state, destination_number):
     # Ensure we have a place to store this user's responses
