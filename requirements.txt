@@ -1,9 +1,7 @@
-Flask
-openai==0.28.1
+langchain
+replicate
+flask
 requests
-python-dateutil
-setuptools
-wheel
-requests_mock
-langchain_community
-reportlab
+uvicorn
+gunicorn
+python-dotenv
