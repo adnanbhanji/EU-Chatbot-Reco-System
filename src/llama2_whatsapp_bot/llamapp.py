@@ -2,12 +2,16 @@ from langchain_community.llms import Replicate
 from flask import Flask, request
 import os
 import requests
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 class WhatsAppClient:
     API_URL = "https://graph.facebook.com/v18.0/"
-    WHATSAPP_API_TOKEN = "EAAGSJRN7axMBOZCIIjoiR3OyhOZAt0MNodL4LatkBc0oULuq18hAdCIXKJB7NP5h6b34A7s4CoNPV7kOXebNJf0yGogFTLZCjcTuc34qZARdhCBMZA3TGo55ohRUqd2SvxgFdiOubPydZAMajfskDliHBZBEMlWDrUmqLejuazg98AiOnPIulzgUfbitRErw5RdGUScTp0NZBnqcrrrAT0ipnbvVdkwHmPCch9Lg"
-    WHATSAPP_CLOUD_NUMBER_ID = "258052860729653"  # Remove /messages from here
-
+    WHATSAPP_API_TOKEN = os.getenv("WHATSAPP_API_TOKEN")
+    WHATSAPP_CLOUD_NUMBER_ID = os.getenv("WHATSAPP_CLOUD_NUMBER_ID")  
+    
     def __init__(self):
         self.headers = {
             "Authorization": f"Bearer {self.WHATSAPP_API_TOKEN}",
@@ -33,7 +37,7 @@ class WhatsAppClient:
             return response.status_code
         return response.status_code
 
-os.environ["REPLICATE_API_TOKEN"] = "r8_0Ml6wLeCfwCSYLtFXEgRNfHp6L95sCD26WheA"    
+os.environ["REPLICATE_API_TOKEN"] = os.getenv("REPLICATE_API_TOKEN")
 llama2_13b_chat = "meta/llama-2-13b-chat:f4e2de70d66816a838a89eeeb621910adffb0dd0baba3976c96980970978018d"
 
 llm = Replicate(
@@ -42,43 +46,6 @@ llm = Replicate(
 )
 client = WhatsAppClient()
 app = Flask(__name__)
-
-# Define the questions for the report flow
-questions = [
-    ('farm_name', "What's the name of your farm?"),
-    ('location', "Where is your farm located? Please provide the address or GPS coordinates."),
-    ('farm_area', "How large is your farm? Please specify in hectares."),
-    ('finish', "Thank you for providing the information, you can continue with any doubt you have.")
-    # Add more questions as needed
-]
-# Define user_states to keep track of the current state of the conversation
-user_states = {}
-
-
-
-# Initialize user_interactions to track interruptions with questions
-user_interactions = {}
-
-# Define the questions dictionary for easy lookup
-questions_dict = {q[0]: q[1] for q in questions}
-
-# Define user_states to keep track of the current state of the conversation
-user_states = {}
-
-user_responses = {}
-
-
-# Define the state machine transitions
-state_transitions = {
-    'start': 'farm_name',
-    'farm_name': 'location',
-    'location': 'farm_area',
-    'farm_area': 'finish',
-    'finish': None  # End of the conversation
-}
-
-def get_next_question(current_state):
-    return state_transitions.get(current_state)
 
 @app.route("/")
 def hello_llama():
@@ -102,8 +69,8 @@ conversation_history = {}
 def handle_llama_interaction(user_message, destination_number):
     script = ("You are a helpful assistant knowledgeable about farming practices, "
               "designed to collect detailed reports from farmers about their farm conditions. "
-              "Please ensure you collect accurate information on the farm's name, location, size, "
-              "and any issues they're facing.")
+              "Please ensure you collect accurate information on the farm's name, farm name, location, size, farm's total methane emissions in kg CO2-eq?,"
+              "electricity consumption, date of declaration and any issues they're facing.")
     
     # Retrieve the existing conversation history
     history = conversation_history.get(destination_number, [])
@@ -132,54 +99,6 @@ def handle_llama_interaction(user_message, destination_number):
         return f"Error processing message with LLaMA: {str(e)}", 500
 
     return assistant_message
-
-
-
-
-def ask_question(question, destination_number):
-    # Send the question
-    response_status = client.send_text_message(question[1], destination_number)
-    if response_status != 200:
-        print(f"Failed to send WhatsApp message: HTTP {response_status}")
-        return f"Failed to send WhatsApp message: HTTP {response_status}", 500
-
-    # Update user_states to keep track of the current state
-    user_states[destination_number] = question[0]
-    return "Asking question: " + question[1]
-
-def prepare_summary(destination_number):
-    responses = user_responses.get(destination_number, {})
-    summary_message = "Thank you for providing the information. Here's what you've shared:\n"
-    summary_message += f"Farm Name: {responses.get('farm_name', 'Not provided')}\n"
-    summary_message += f"Location: {responses.get('location', 'Not provided')}\n"
-    summary_message += f"Farm Area: {responses.get('farm_area', 'Not provided')}\n"
-    
-    # Send the summary message
-    client.send_text_message(summary_message, destination_number)
-    return "Summary sent."
-
-
-def process_answer(answer, current_state, destination_number):
-    # Ensure we have a place to store this user's responses
-    if destination_number not in user_responses:
-        user_responses[destination_number] = {}
-    # Store the current answer
-    user_responses[destination_number][current_state] = answer
-
-    # Move to the next state/question
-    next_question = get_next_question(current_state)
-    if next_question:
-        user_states[destination_number] = next_question
-        if next_question != 'finish':  # If there's a next question that is not the final message
-            return ask_question((next_question, questions_dict[next_question]), destination_number)
-    # If no more questions or reaching 'finish', prepare summary
-    if current_state == 'farm_area' or next_question is None:  # Adjust this condition as needed
-        summary = prepare_summary(destination_number)
-        user_states.pop(destination_number, None)  # Cleanup
-        user_responses.pop(destination_number, None)  # Cleanup
-        return summary
-    return "Unexpected end of conversation."
-
 
 
 if __name__ == "__main__":
