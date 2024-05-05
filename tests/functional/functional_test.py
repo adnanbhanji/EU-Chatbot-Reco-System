@@ -1,11 +1,11 @@
-import unittest
 import os
-from fastapi.testclient import TestClient
 import sys
+import unittest
+from fastapi.testclient import TestClient
 
 # Adding the 'src' directory to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'src')))
-from mistral_model_rag_final import app  # Adjust the import according to your application structure
+from mistral_model_rag_final import app
 
 class TestYourApplication(unittest.TestCase):
     @classmethod
@@ -15,10 +15,10 @@ class TestYourApplication(unittest.TestCase):
 
     def test_environment_variables_loaded(self):
         """Ensure environment variables are loaded correctly."""
-        self.assertIsNotNone(os.getenv("TWILIO_ACCOUNT_SID"))
-        self.assertIsNotNone(os.getenv("TWILIO_AUTH_TOKEN"))
-        self.assertIsNotNone(os.getenv("TWILIO_NUMBER"))
-        self.assertIsNotNone(os.getenv("MY_NUMBER"))
+        self.assertIsNotNone(os.getenv("TWILIO_ACCOUNT_SID"), "TWILIO_ACCOUNT_SID is not set.")
+        self.assertIsNotNone(os.getenv("TWILIO_AUTH_TOKEN"), "TWILIO_AUTH_TOKEN is not set.")
+        self.assertIsNotNone(os.getenv("TWILIO_NUMBER"), "TWILIO_NUMBER is not set.")
+        self.assertIsNotNone(os.getenv("MY_NUMBER"), "MY_NUMBER is not set.")
 
     def test_environment_variables_format(self):
         """Test the format of critical environment variables."""
@@ -33,18 +33,18 @@ class TestYourApplication(unittest.TestCase):
     def test_api_endpoint(self):
         """Test a FastAPI endpoint."""
         response = self.client.get("/")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200, "Failed to reach the GET / endpoint.")
 
     def test_api_endpoint_content(self):
         """Test the content of the response for a FastAPI endpoint."""
         response = self.client.get("/")
         response_content = response.json().get("message")
-        self.assertEqual(response_content, "Hello, World!", "Response content is not as expected.")
+        self.assertEqual(response_content, "Hello, World!", "Response content of GET / is not as expected.")
 
     def test_endpoint_with_invalid_input(self):
         """Test endpoint behavior with invalid input."""
         response = self.client.get("/wrong-endpoint")
-        self.assertEqual(response.status_code, 404, "Expected a 404 Bad Request status code for invalid input.")
+        self.assertEqual(response.status_code, 404, "Expected a 404 Not Found status code for invalid input but got another.")
 
 if __name__ == '__main__':
     unittest.main()
